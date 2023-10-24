@@ -4,8 +4,7 @@ from django.contrib.auth.models import User
 
 class Photo(models.Model):
     name = models.CharField(max_length=60)
-    path_to_file = models.FileField()
-    class_name = models.CharField(max_length=60)
+    image = models.ImageField(default='default_image.jpg')
 
     def __str__(self):
         return self.name

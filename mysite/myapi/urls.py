@@ -11,4 +11,5 @@ urlpatterns = [
     path('', include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('login/', auth_views.LoginView.as_view(), name='login'),
+    path('upload-photo', views.upload_photo, name='upload_photo'),
 ]
