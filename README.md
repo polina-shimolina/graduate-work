@@ -18,11 +18,14 @@ mysite - back на джанго
    ```
    cd mysite
    ```
-3. Проведите миграции базы данных:
+3. Установите зависимости, выполнив команду:
+   ```
+   pip install -r requirements.txt
+   ```
+4. Проведите миграции базы данных:
    ```
    python manage.py migrate
    ```
-   
 5. Запустите сервер Django:
    ```
    python manage.py runserver
