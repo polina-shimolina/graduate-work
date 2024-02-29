@@ -17,6 +17,7 @@ mysite - back на джанго
    pip install virtualenv
    ```
 2. Активируйте виртуальное окружение:
+
    Для Windows:
    ```
    venv\Scripts\activate
@@ -33,15 +34,11 @@ mysite - back на джанго
    ```
    cd mysite
    ```
-3. Установите зависимости, выполнив команду:
-   ```
-   pip install -r requirements.txt
-   ```
-4. Проведите миграции базы данных:
+3. Проведите миграции базы данных:
    ```
    python manage.py migrate
    ```
-5. Запустите сервер Django:
+4. Запустите сервер Django:
    ```
    python manage.py runserver
    ```
