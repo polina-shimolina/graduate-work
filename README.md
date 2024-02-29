@@ -17,6 +17,7 @@ mysite - back на джанго
    pip install virtualenv
    ```
 2. Активируйте виртуальное окружение:
+
    Для Windows:
    ```
    venv\Scripts\activate
