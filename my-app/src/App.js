@@ -4,6 +4,7 @@ import {Provider} from "react-redux"
 import Photos from './components/Photos';
 import About from './components/About';
 import Main from './components/Main';
+import Footer from './components/Footer';
 import { Login, Register } from './components/LoginAndRegister';
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/login" element={<><Login /></>}/>
           <Route path="/register" element={<><Register /></>}/>
         </Routes>
+        <Footer/>
       </BrowserRouter>
   );
 }

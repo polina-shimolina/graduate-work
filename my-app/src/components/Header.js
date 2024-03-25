@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import my_logo from "../assets/mapicon.svg";
+import my_logo from "../assets/new_map_logo.png";
 
 const Header = () => {
     return(
