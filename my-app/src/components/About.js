@@ -13,6 +13,7 @@ const About = () => {
                 </div>
                 <Link to="/photos">Испытать сервис</Link>
             </div>
+
         </div>
     );
 };

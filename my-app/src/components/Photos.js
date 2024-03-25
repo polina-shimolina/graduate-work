@@ -17,7 +17,6 @@ const Photos = () => {
   const handleSharpnessChange = (event) => {
     setSharpness(event.target.value);
   }
-
   return (
     <div className="container">
       <h1>Загрузка файла</h1>
@@ -66,6 +65,9 @@ const Photos = () => {
             <button type="submit">Запустить волшебство</button>
           </div>
         )}
+        
+
+        <button type="submit">Запустить волшебство</button>
       </form>
     </div>
   );
