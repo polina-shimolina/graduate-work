@@ -3,7 +3,19 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Header_Authorised from './Header_Authorised';
 import Header_UnAuthorised from './Header_UnAuthorised';
 
-const Header = ({isAuthenticated}) => {
+const Header = () => {
+    const [isAuthenticated, setIsAuthenticated] = useState(localStorage.getItem('accessToken') ? true : false);
+    useEffect(() => {
+        const handleStorageChange = () => {
+            setIsAuthenticated(localStorage.getItem('accessToken') ? true : false);
+        };
+
+        window.addEventListener('storage', handleStorageChange);
+
+        return () => {
+            window.removeEventListener('storage', handleStorageChange);
+        };
+    }, []);
 
     return isAuthenticated ? <Header_Authorised /> : <Header_UnAuthorised />;
 };

@@ -10,7 +10,7 @@ from rest_framework.decorators import api_view, permission_classes, authenticati
 from myapi.serializers import UserSerializer, LoginRequestSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 
 class PhotoViewSet(viewsets.ModelViewSet):
     queryset = Photo.objects.all().order_by('name')

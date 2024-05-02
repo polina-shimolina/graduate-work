@@ -46,9 +46,6 @@ function Login({ onLogin }) {
         setUsername(data.username);
         setEmail(data.email);
         setDateJoined(data.date_joined);
-        console.log(data.first_name);
-        console.log(data.email);
-
         setError(null)
       })
       .catch(error => {
@@ -132,6 +129,9 @@ function Login({ onLogin }) {
         localStorage.setItem('username', username);
         localStorage.setItem('email', email);
         localStorage.setItem('dateJoined', dateJoined);
+        console.log(firstName);
+        console.log(email);
+
         onLogin()
         navigate('/')
            })

@@ -6,9 +6,11 @@ import Photos from './components/Photos';
 import About from './components/About';
 import Main from './components/Main';
 import Footer from './components/Footer';
-import Login from './components/LoginAndRegister';
+import Login from './components/LoginForm';
 import Logout from './components/Logout';
 import Account from './components/Account';
+import Register from './components/RegistrationForm'
+
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -35,12 +37,13 @@ function App() {
 
   return (
       <BrowserRouter basename="/">
-        <Header isAuthenticated={isAuthenticated} />
+        <Header />
         <Routes>
           <Route path="/" element={<><h1>Сегментируйте свои изображения с удовольствием</h1><h3>1000000 пользователей уже воспользовались и оценили наш сервис</h3><Main /></>}/>
           <Route path="/about" element={<><About /></>}/>
           <Route path="/photos" element={<><Photos /></>}/>
           <Route path="/login" element={<Login onLogin={handleLogin} />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/logout" element={<Logout onLogout={handleLogout} />} />
           <Route path="/account" element={<Account isAuthenticated={isAuthenticated} />} />
         </Routes>
