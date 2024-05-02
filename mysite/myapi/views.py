@@ -4,6 +4,10 @@ from .models import Photo
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.request import Request
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from myapi.serializers import UserSerializer
 
 class PhotoViewSet(viewsets.ModelViewSet):
     queryset = Photo.objects.all().order_by('name')
@@ -26,3 +30,10 @@ def upload_photo(request):
         return response
     else:
         return JsonResponse({'message': 'Ошибка загрузки файла'})
+    
+
+@api_view()
+def user(request: Request):
+    return Response({
+        'data': UserSerializer(request.user).data
+    })
