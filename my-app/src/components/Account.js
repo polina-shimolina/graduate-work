@@ -1,12 +1,32 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
-const Account = ({ firstName, lastName, username, email, dateJoined }) => {
+function Account({ isAuthenticated }) {
+    const [userData, setUserData] = useState(null);
+
+    useEffect(() => {
+      if (isAuthenticated) {
+        const firstName = localStorage.getItem('firstName');
+        const lastName = localStorage.getItem('lastName');
+        const username = localStorage.getItem('username');
+        const email = localStorage.getItem('email');
+        const dateJoined = localStorage.getItem('dateJoined');
+  
+        setUserData({ firstName, lastName, username, email, dateJoined });
+      }
+    }, [isAuthenticated]);
     return (
-        <div className="Account">
-            <h1>{firstName} {lastName}</h1>
-            <h2>{username}</h2>
-            <p>Email: {email}</p>
-            <p>Профиль создан: {dateJoined}</p>
+        <div>
+          {isAuthenticated && userData? (
+            <div>
+              <h2>Привет, {userData.firstName} {userData.lastName}</h2>
+              <p>Имя пользователя: {userData.username}</p>
+              <p>Email: {userData.email}</p>
+              <p>Дата регистрации: {userData.dateJoined}</p>
+              {/* Другие компоненты и данные аккаунта */}
+            </div>
+          ) : (
+            <p>Пожалуйста, войдите для доступа к аккаунту</p>
+          )}
         </div>
     );
 };

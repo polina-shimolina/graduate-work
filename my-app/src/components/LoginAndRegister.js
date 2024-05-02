@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 
-function Login() {
+function Login({ onLogin }) {
   const [access, setAccess] = useState(localStorage.getItem('accessToken'))
   const [refresh, setRefresh] = useState(localStorage.getItem('refreshToken'))
   const [refreshRequired, setRefreshRequired] = useState(false)
@@ -46,6 +46,9 @@ function Login() {
         setUsername(data.username);
         setEmail(data.email);
         setDateJoined(data.date_joined);
+        console.log(data.first_name);
+        console.log(data.email);
+
         setError(null)
       })
       .catch(error => {
@@ -124,7 +127,13 @@ function Login() {
         localStorage.setItem('refreshToken', refresh)
         setRefresh(refresh)
         setError(null)
-        navigate('/account')
+        localStorage.setItem('firstName', firstName);
+        localStorage.setItem('lastName', lastName);
+        localStorage.setItem('username', username);
+        localStorage.setItem('email', email);
+        localStorage.setItem('dateJoined', dateJoined);
+        onLogin()
+        navigate('/')
            })
            .catch(error => {
              console.log(error)
@@ -158,12 +167,7 @@ function Login() {
       </form>
       :
       !error?
-        <div className="Profile">
-          <h1>{firstName} {lastName}</h1>
-          <h2>{username}</h2>
-          <p>email: {email}</p>
-          <p>Профиль создан {dateJoined}</p>
-        </div>
+        null
         :
         null
       }
