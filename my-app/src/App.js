@@ -35,7 +35,9 @@ function getCookie(name) {
 
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(true)
+  const [access, setAccess] = useState(localStorage.getItem('accessToken'))
+  const [refresh, setRefresh] = useState(localStorage.getItem('refreshToken'))
+  const [refreshRequired, setRefreshRequired] = useState(false)
   const [loading, setLoading] = useState()
   const [formUsername, setFormUsername] = useState()
   const [formPassword, setFormPassword] = useState()
@@ -45,15 +47,15 @@ function App() {
   const [email, setEmail] = useState('');
   const [dateJoined, setDateJoined] = useState('');
   const [error, setError] = useState('');
-  const csrftoken = getCookie('csrftoken')
 
   useEffect(() => {
-    if (isLoggedIn) {
+    if (access) {
       fetch(
           '/api/user',
           {
           headers: {
             'Content-Type': 'application/json;charset=utf-8',
+            'Authorization': `Bearer ${access}`,
           },
         }
       )
@@ -61,6 +63,9 @@ function App() {
         if (response.ok) {
           return response.json();
         } else {
+          if (response.status === 401) {
+            throw Error('refresh')
+          }
           throw Error(`Something went wrong: code ${response.status}`);
         }
       })
@@ -73,23 +78,60 @@ function App() {
         setError(null)
       })
       .catch(error => {
-        console.log(error);
-        setError('Ошибка, подробности в консоли');
-        setIsLoggedIn(false)
+        if (error.message === 'refresh') {
+          setRefreshRequired(true)
+        } else {
+          console.log(error)
+          setError('Ошибка, подробности в консоли')
+        }
       })
     } 
-  }, [isLoggedIn])
+  }, [access])
+
+
+
+  useEffect(() => {
+    if (refreshRequired) {
+    fetch(
+        '/api/token/refresh',
+        {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json;charset=utf-8',
+        },
+        body: JSON.stringify({ refresh })
+      }
+    )
+      .then(response => {
+        if (response.ok) {
+          return response.json()
+        } else {
+          throw Error(`Something went wrong: code ${response.status}`)
+        }
+      })
+      .then(({access, refresh}) => {
+        localStorage.setItem('accessToken', access)
+        setAccess(access)
+        localStorage.setItem('refreshToken', refresh)
+        setRefresh(refresh)
+        setError(null)
+      })
+      .catch(error => {
+        console.log(error)
+        setError('Ошибка, подробности в консоли')
+      })
+    }
+  }, [refreshRequired])
 
   const submitHandler = e => {
     e.preventDefault();
     setLoading(true);
     fetch(
-      '/api/login',
+      '/api/token/obtain',
       {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json;charset=utf-8',
-          'X-CSRFToken': csrftoken,
         },
         body: JSON.stringify({
           username: formUsername,
@@ -104,8 +146,11 @@ function App() {
           throw Error(`Something went wrong: code ${response.status}`)
         }
       })
-      .then(({key}) => {
-        setIsLoggedIn(true)
+      .then(({access, refresh}) => {
+        localStorage.setItem('accessToken', access)
+        setAccess(access)
+        localStorage.setItem('refreshToken', refresh)
+        setRefresh(refresh)
         setError(null)
            })
            .catch(error => {
@@ -119,7 +164,7 @@ function App() {
   return (
     <div className="App">
       {error? <p>{error}</p> : null}
-      {!isLoggedIn?
+      {!access?
       loading? "Загрузка..." :
       <form className="loginForm" onSubmit={submitHandler}>
         <input type="text" name="username" value={formUsername} onChange={e => setFormUsername(e.target.value)} placeholder="Username"/>

@@ -27,7 +27,8 @@ SECRET_KEY = "django-insecure-bn(hdpi(h^yug1gnsh=)ey=ula2_rfite8e7sc=c43cc6b3^u=
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+ROTATE_REFRESH_TOKENS = True
+BLACKLIST_AFTER_ROTATION = True
 
 # Application definition
 
@@ -41,6 +42,7 @@ INSTALLED_APPS = [
     'myapi',
     'rest_framework',
     'rest_framework.authtoken',
+    'rest_framework_simplejwt.token_blacklist',
 ]
 
 MIDDLEWARE = [
@@ -136,3 +138,9 @@ CSRF_TRUSTED_ORIGINS = ['http://localhost:3000']
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
