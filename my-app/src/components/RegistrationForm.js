@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 const Register = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -25,11 +26,34 @@ const Register = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
-            <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-            <button type="submit">Register</button>
-        </form>
+        <form onSubmit={handleSubmit} className="container mt-4 text-center">
+    <div className="row">
+        <div className="col-sm-6 mx-auto">
+            <input type="text" className="form-control mb-3" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
+        </div>
+    </div>
+    <div className="row">
+        <div className="col-sm-6 mx-auto">
+            <input type="password" className="form-control mb-3" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        </div>
+    </div>
+    <div className="row">
+        <div className="col-sm-6 mx-auto">
+            <input type="email" className="form-control mb-3" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+        </div>
+    </div>
+    <div className="row">
+        <div className="col mx-auto">
+            <button type="submit" className="btn btn-primary">Зарегистрироваться</button>
+        </div>
+    </div>
+    <div className="row mt-3">
+        <div className="col mx-auto">
+            <a href="/login" className="text-decoration-underline">Уже есть аккаунт? Войти</a>
+        </div>
+    </div>
+</form>
+
     );
 };
 

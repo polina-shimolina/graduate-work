@@ -129,7 +129,7 @@ function Login({ onLogin }) {
         localStorage.setItem('username', username);
         localStorage.setItem('email', email);
         localStorage.setItem('dateJoined', dateJoined);
-        console.log(firstName);
+        console.log('Имя ',firstName);
         console.log(email);
 
         onLogin()
@@ -164,6 +164,11 @@ function Login({ onLogin }) {
           <button className="btn btn-primary" type="submit">Войти</button>
         </div>
         </div>
+        <div className="row mt-3">
+        <div className="col mx-auto">
+            <a href="/register" className="text-decoration-underline">Еще нет аккаунта? Зарегистрируйтесь</a>
+        </div>
+    </div>
       </form>
       :
       !error?
