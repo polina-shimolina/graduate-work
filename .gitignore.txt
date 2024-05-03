@@ -1,2 +1,2 @@
-/venv/
-/mysite/venv/
+venv/
+mysite/venv/
