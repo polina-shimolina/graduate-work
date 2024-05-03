@@ -18,13 +18,23 @@ const UserTeamPage = () => {
         navigate('/photos');
     };
 
+    const handleInviteClick = () => {
+        // Логика для обработки нажатия на кнопку "Пригласить в команду"
+        console.log('Пригласить в команду');
+    };
+
     return (
         <div className="container mt-4">
-            <div className="d-flex justify-content-end mb-3">
-                <button className="btn btn-danger">Выйти из команды</button>
+            <div className="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h2>{team.name}</h2>
+                    <p>Автор: {team.author}</p>
+                </div>
+                <div>
+                    <button className="btn btn-primary mr-2" onClick={handleInviteClick}>Пригласить в команду</button>
+                    <button className="btn btn-danger ml-2">Выйти из команды</button>
+                </div>
             </div>
-            <h2>{team.name}</h2>
-            <p>Автор: {team.author}</p>
             <div className="card mt-3" onClick={handleCardClick}>
                 <div className="card-body card-hover" onClick={handleCardClick}>
                     <p className="card-text">Здесь будет изображение</p>
