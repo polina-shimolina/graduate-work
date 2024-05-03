@@ -85,6 +85,12 @@ function Login({ onLogin }) {
         setAccess(access)
         localStorage.setItem('refreshToken', refresh)
         setRefresh(refresh)
+        localStorage.setItem('firstName', firstName);
+        localStorage.setItem('lastName', lastName);
+        localStorage.setItem('username', username);
+        localStorage.setItem('email', email);
+        localStorage.setItem('dateJoined', dateJoined);
+        console.log(email)
         setError(null)
       })
       .catch(error => {
@@ -124,15 +130,9 @@ function Login({ onLogin }) {
         localStorage.setItem('refreshToken', refresh)
         setRefresh(refresh)
         setError(null)
-        localStorage.setItem('firstName', firstName);
-        localStorage.setItem('lastName', lastName);
-        localStorage.setItem('username', username);
-        localStorage.setItem('email', email);
-        localStorage.setItem('dateJoined', dateJoined);
-        console.log('Имя ',firstName);
-        console.log(email);
 
         onLogin()
+        
         navigate('/')
            })
            .catch(error => {

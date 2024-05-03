@@ -1,7 +1,7 @@
-const handleLogout = () => {
+const handleLogout = ({ onLogout }) => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
-    window.location.href = '/login'; // Перенаправление на страницу входа
+    onLogout()
   };
   
   export default handleLogout;

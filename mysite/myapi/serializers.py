@@ -28,14 +28,14 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserProfile
-        fields = ['team']
+        fields = '__all__'
 
 
 class UserSerializer(serializers.ModelSerializer):
         profile = UserProfileSerializer()
         class Meta:
            model = User
-           fields = ['username', 'first_name', 'last_name', 'email', 'date_joined']
+           fields = ['username', 'first_name', 'last_name', 'email', 'date_joined', 'profile']
         
         def create(self, validated_data):
             profile_data = validated_data.pop('profile')

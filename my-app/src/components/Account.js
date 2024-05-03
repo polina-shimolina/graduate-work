@@ -2,33 +2,92 @@ import React, { useState, useEffect } from 'react';
 
 function Account({ isAuthenticated }) {
     const [userData, setUserData] = useState(null);
+    const [refreshRequired, setRefreshRequired] = useState(false);
 
     useEffect(() => {
-      if (isAuthenticated) {
-        const firstName = localStorage.getItem('firstName');
-        const lastName = localStorage.getItem('lastName');
-        const username = localStorage.getItem('username');
-        const email = localStorage.getItem('email');
-        const dateJoined = localStorage.getItem('dateJoined');
-  
-        setUserData({ firstName, lastName, username, email, dateJoined });
+        const fetchUserData = async () => {
+            if (isAuthenticated) {
+                try {
+                    const response = await fetch(
+                      '/api/user',
+                      {
+                      headers: {
+                        'Content-Type': 'application/json;charset=utf-8',
+                        'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                      },
+                    }
+                  );
+                    if (response.ok) {
+                        const userDataFromApi = await response.json();
+                        setUserData(userDataFromApi);
+                    } else if (response.status === 401) {
+                      setRefreshRequired(true);
+                    } else {
+                        console.error('Failed to fetch user data');
+                    }
+                } catch (error) {
+                    console.error('Error fetching user data:', error);
+                }
+            }
+        };
+
+        fetchUserData();
+    }, [isAuthenticated, refreshRequired]);
+
+    useEffect(() => {
+      if (refreshRequired) {
+          fetch('/api/token/refresh', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json;charset=utf-8',
+              },
+              body: JSON.stringify({ refresh: localStorage.getItem('refreshToken') }),
+          })
+          .then(response => {
+              if (response.ok) {
+                  return response.json();
+              } else {
+                  throw new Error(`Something went wrong: code ${response.status}`);
+              }
+          })
+          .then(({ access, refresh}) => {
+              localStorage.setItem('accessToken', access);
+              localStorage.setItem('refreshToken', refresh);
+              
+              setRefreshRequired(false);
+          })
+          .catch(error => {
+              console.error(error);
+              // Обработка ошибки обновления токена
+          });
       }
-    }, [isAuthenticated]);
-    return (
-        <div>
-          {isAuthenticated && userData? (
-            <div>
-              <h2>Привет, {userData.firstName} {userData.lastName}</h2>
-              <p>Имя пользователя: {userData.username}</p>
-              <p>Email: {userData.email}</p>
-              <p>Дата регистрации: {userData.dateJoined}</p>
-              {/* Другие компоненты и данные аккаунта */}
-            </div>
-          ) : (
-            <p>Пожалуйста, войдите для доступа к аккаунту</p>
-          )}
-        </div>
-    );
+  }, [refreshRequired]);
+  return (
+    <div className="text-center">
+        
+            {isAuthenticated && userData ? (
+                  <div className="text-center">
+
+              <h3 className="mb-2">Привет, {userData.data.first_name} {userData.data.last_name}</h3>
+              <div className="card mx-auto mt-4" style={{ maxWidth: '400px' }}>
+                  <div className="card-body">
+                <div>
+                    <h4 className="card-subtitle mb-3 text-muted">Твой профиль</h4>
+                    <p className="card-text">Имя пользователя: {userData.data.username}</p>
+                    <p className="card-text">Email: {userData.data.email}</p>
+                    <p className="card-text">Дата регистрации: {userData.data.date_joined}</p>
+                    {/* Другие компоненты и данные аккаунта */}
+                </div>
+                </div>
+    </div>
+    </div>
+            ) : (
+                <p>Пожалуйста, войдите для доступа к аккаунту</p>
+            )}
+
+    </div>
+);
+
 };
 
 export default Account;

@@ -1,12 +1,12 @@
-from rest_framework import viewsets, permissions
-from .serializers import PhotoSerializer, UserSerializer
+from rest_framework import viewsets, permissions, generics
+from .serializers import PhotoSerializer, UserSerializer, UserProfileSerializer
 from .models import Photo
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework.decorators import api_view, permission_classes, authentication_classes
+from rest_framework.decorators import api_view, permission_classes, authentication_classes, action
 from myapi.serializers import UserSerializer, LoginRequestSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.authentication import JWTAuthentication
@@ -21,6 +21,7 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [permissions.AllowAny]  # Разрешите доступ всем
+    
 
 @csrf_exempt
 def upload_photo(request):
