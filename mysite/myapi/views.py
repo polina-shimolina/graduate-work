@@ -12,6 +12,7 @@ from myapi.serializers import UserSerializer, LoginRequestSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.contrib.auth import authenticate, login, logout
+from rest_framework.views import APIView
 
 class PhotoViewSet(viewsets.ModelViewSet):
     queryset = Photo.objects.all().order_by('name')
@@ -57,3 +58,14 @@ def register_user(request):
         return Response({'message': 'User registered successfully'}, status=status.HTTP_201_CREATED)
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    
+
+
+class UpdateUserView(APIView):
+    def put(self, request):
+        user = User.objects.get(id=request.user.id)
+        serializer = UserSerializer(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

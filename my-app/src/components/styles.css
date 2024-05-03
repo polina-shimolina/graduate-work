@@ -1,0 +1,35 @@
+.edit-button {
+  position: absolute;
+  top: 10px; /* Отступ от верхнего края */
+  right: 10px; /* Отступ от правого края */
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.5rem; /* Размер иконки */
+  color: #333; /* Цвет иконки */
+  transition: color 0.3s; /* Плавное изменение цвета */
+  }
+  
+  .edit-icon {
+    vertical-align: middle;
+  }
+  
+
+  .card-container {
+    position: relative;
+  }
+  
+  .edit-button {
+    position: absolute;
+    top: 10px; /* Отступ от верхнего края */
+    right: 10px; /* Отступ от правого края */
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem; /* Размер иконки */
+    color: #333; /* Цвет иконки */
+  }
+  
+  .edit-button:hover {
+    color: #ff0000; /* Новый цвет при наведении */
+  }
