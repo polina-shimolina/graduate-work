@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FaPen } from 'react-icons/fa';
-import './styles.css'; // Файл со стилями
+import './style/Account.css'; // Файл со стилями
 
 function Account({ isAuthenticated }) {
     const [userData, setUserData] = useState(null);

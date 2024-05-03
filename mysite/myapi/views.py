@@ -1,6 +1,6 @@
 from rest_framework import viewsets, permissions, generics
-from .serializers import PhotoSerializer, UserSerializer, UserProfileSerializer
-from .models import Photo
+from .serializers import UploadedFileSerializer, UserSerializer, UserProfileSerializer
+from .models import UploadedFile
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -13,10 +13,9 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.contrib.auth import authenticate, login, logout
 from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.status import HTTP_201_CREATED
 
-class PhotoViewSet(viewsets.ModelViewSet):
-    queryset = Photo.objects.all().order_by('name')
-    serializer_class = PhotoSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -25,17 +24,18 @@ class UserViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]  # Разрешите доступ всем
     
 
-@csrf_exempt
-def upload_photo(request):
-    if request.method == 'POST' and request.FILES.get('photo'):
-        photo = request.FILES['photo']
-        new_photo = Photo(image=photo)
-        new_photo.save()
-        response = JsonResponse({'message': 'Файл успешно загружен'})
-        response["Access-Control-Allow-Origin"] = "http://localhost:3000"
-        return response
-    else:
-        return JsonResponse({'message': 'Ошибка загрузки файла'})
+class FileUploadView(APIView):
+    def post(self, request):
+        file_obj = request.data.get('file')
+        if not file_obj:
+            return Response({'error': 'Файл не был загружен'}, status=400)
+        
+        uploaded_file = UploadedFile(file=file_obj)
+        uploaded_file.save()
+
+        serializer = UploadedFileSerializer(uploaded_file)
+
+        return Response({'message': 'Файл успешно загружен'})
     
 
 @api_view()

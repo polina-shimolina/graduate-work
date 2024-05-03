@@ -1,9 +1,34 @@
 import React, { useState } from 'react';
 
+
 const Photos = () => {
   const [selectedFile, setSelectedFile] = useState();
   const [contrast, setContrast] = useState(100);
   const [sharpness, setSharpness] = useState(0);
+
+
+  const handleUploadFile = async () => {
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+  
+    try {
+      const response = await fetch('/api/upload/', {
+        method: 'POST',
+        body: formData
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Ответ от сервера:', data);
+        alert('Файл успешно загружен на сервер!');
+      } else {
+        throw new Error('Ошибка при загрузке файла');
+      }
+    } catch (error) {
+      console.error('Ошибка при загрузке файла:', error);
+      alert('Произошла ошибка при загрузке файла.');
+    }
+  }
 
   const handleFileSelect = (event) => {
     const file = event.target.files[0];
@@ -17,60 +42,59 @@ const Photos = () => {
   const handleSharpnessChange = (event) => {
     setSharpness(event.target.value);
   }
-  return (
-    <div className="container">
-      <h1>Загрузка файла</h1>
+  
+return (
+  <div className="container">
+    <h1>Загрузка файла</h1>
 
-      <form>
-        <div className="form-group">
-          <label htmlFor="fileInput">Выберите файл:</label>
-          <input 
-            type="file"
-            onChange={handleFileSelect} 
-            id="fileInput"
+    <form onSubmit={(e) => e.preventDefault()}>
+      <div className="form-group">
+        <label htmlFor="fileInput">Выберите файл:</label>
+        <input 
+          type="file"
+          onChange={handleFileSelect} 
+          id="fileInput"
+        />
+      </div>
+
+      {selectedFile && (
+        <div>
+          <img 
+            src={URL.createObjectURL(selectedFile)} 
+            alt="Preview" 
+            style={{
+              filter: `contrast(${contrast}%) brightness(100%) saturate(100%) blur(${sharpness}px)`
+            }}
           />
-        </div>
-
-        {selectedFile && (
           <div>
-            <img 
-              src={URL.createObjectURL(selectedFile)} 
-              alt="Preview" 
-              style={{
-                filter: `contrast(${contrast}%) brightness(100%) saturate(100%) blur(${sharpness}px)`
-              }}
+            <label htmlFor="contrastRange">Контрастность:</label>
+            <input 
+              type="range" 
+              min="0" 
+              max="200" 
+              value={contrast} 
+              onChange={handleContrastChange} 
+              id="contrastRange"
             />
-            <div>
-              <label htmlFor="contrastRange">Контрастность:</label>
-              <input 
-                type="range" 
-                min="0" 
-                max="200" 
-                value={contrast} 
-                onChange={handleContrastChange} 
-                id="contrastRange"
-              />
-            </div>
-            <div>
-              <label htmlFor="sharpnessRange">Резкость:</label>
-              <input 
-                type="range" 
-                min="-10" 
-                max="10" 
-                value={sharpness} 
-                onChange={handleSharpnessChange} 
-                id="sharpnessRange"
-              />
-            </div>
-            <button type="submit">Запустить волшебство</button>
           </div>
-        )}
-        
+          <div>
+            <label htmlFor="sharpnessRange">Резкость:</label>
+            <input 
+              type="range" 
+              min="-10" 
+              max="10" 
+              value={sharpness} 
+              onChange={handleSharpnessChange} 
+              id="sharpnessRange"
+            />
+          </div>
+          <button onClick={handleUploadFile}>Отправить файл на сервер</button>
+        </div>
+      )}
+    </form>
+  </div>
+);
 
-        <button type="submit">Запустить волшебство</button>
-      </form>
-    </div>
-  );
 };
 
 export default Photos;

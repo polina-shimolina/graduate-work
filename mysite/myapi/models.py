@@ -2,12 +2,9 @@ from django.db import models
 from django.contrib.auth.models import User
 # Create your models here.
 
-class Photo(models.Model):
-    name = models.CharField(max_length=60)
-    image = models.ImageField()
-
-    def __str__(self):
-        return self.name
+class UploadedFile(models.Model):
+    file = models.FileField(upload_to='uploads/')
+    uploaded_at = models.DateTimeField(auto_now_add=True)
     
 class Team(models.Model):
     teamname = models.CharField(max_length=100)
@@ -17,15 +14,6 @@ class Team(models.Model):
     
     def __str__(self):
         return self.teamname
-
-
-class UserPhoto(models.Model):
-    photo = models.ForeignKey(Photo, on_delete=models.CASCADE, related_name='user_photos')
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='owned_photos')
-    segmented_photo = models.ForeignKey(Photo, on_delete=models.CASCADE, related_name='segmentated_photos')
-    is_visible_for_team = models.BooleanField(default=True)
-    def __str__(self):
-        return f"UserPhoto {self.id} - Owner: {self.owner.username}"
     
 
 class UserProfile(models.Model):

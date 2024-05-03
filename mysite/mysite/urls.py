@@ -31,7 +31,7 @@ urlpatterns = [
     path('api/token/obtain', TokenObtainPairView.as_view(), name='token_obtain'),
     path('api/token/refresh', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/user/update/', views.UpdateUserView.as_view()),
-    path('api/upload-photo', views.upload_photo, name='upload_photo'),
+    path('api/upload/', views.FileUploadView.as_view(), name='file-upload'),
 
 ]
  
