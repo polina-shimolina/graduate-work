@@ -10,10 +10,11 @@ import Login from './components/LoginForm';
 import Logout from './components/Logout';
 import Account from './components/Account';
 import Register from './components/RegistrationForm'
+import Team from './components/Team'
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-
+  const [hasTeam, setHasTeam] = useState(true); // Заглушка для hasTeam
   useEffect(() => {
     const isAuthenticated = localStorage.getItem('isAuthenticated');
     if (isAuthenticated === 'true') {
@@ -46,6 +47,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/logout" element={<Logout onLogout={handleLogout} />} />
           <Route path="/account" element={<Account isAuthenticated={isAuthenticated} />} />
+          <Route path="/team" element={<Team isAuthenticated={isAuthenticated} hasTeam={hasTeam}/>} />
         </Routes>
         <Footer/>
       </BrowserRouter>

@@ -1,0 +1,4 @@
+.card-hover:hover {
+    background-color: #f0f0f0; /* Цвет подсветки при наведении */
+    cursor: pointer; /* Изменение курсора при наведении */
+}
