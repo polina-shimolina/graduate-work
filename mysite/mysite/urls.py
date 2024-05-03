@@ -27,6 +27,7 @@ urlpatterns = [
     path('', include('myapi.urls')),
     path('api/user', views.user, name='user'),
     path('api/login', views.login, name='login'),
+    path('api/register', views.register_user, name='register'),
     path('api/token/obtain', TokenObtainPairView.as_view(), name='token_obtain'),
     path('api/token/refresh', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/upload-photo', views.upload_photo, name='upload_photo'),

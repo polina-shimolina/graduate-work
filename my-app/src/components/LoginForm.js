@@ -85,12 +85,6 @@ function Login({ onLogin }) {
         setAccess(access)
         localStorage.setItem('refreshToken', refresh)
         setRefresh(refresh)
-        localStorage.setItem('firstName', firstName);
-        localStorage.setItem('lastName', lastName);
-        localStorage.setItem('username', username);
-        localStorage.setItem('email', email);
-        localStorage.setItem('dateJoined', dateJoined);
-        console.log(email)
         setError(null)
       })
       .catch(error => {
@@ -149,7 +143,8 @@ function Login({ onLogin }) {
       {!access?
       loading? "Загрузка..." :
       <form className="container mt-4 text-center" onSubmit={submitHandler}>
-        <div className="row">
+          <h2>Вход</h2>
+          <div className="row">
         <div className="col-sm-6 mx-auto">
           <input className="form-control mb-3" type="text" name="username" value={formUsername} onChange={e => setFormUsername(e.target.value)} placeholder="Username"/>
           </div>

@@ -1,6 +1,5 @@
 import Header from './components/Header';
 import React, { useState, useEffect } from 'react';
-
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Photos from './components/Photos';
 import About from './components/About';
@@ -15,6 +14,8 @@ import Team from './components/Team'
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [hasTeam, setHasTeam] = useState(true); // Заглушка для hasTeam
+
+
   useEffect(() => {
     const isAuthenticated = localStorage.getItem('isAuthenticated');
     if (isAuthenticated === 'true') {
@@ -36,6 +37,11 @@ function App() {
     setIsAuthenticated(false);
   };
 
+  const handleRegister = () => {
+    console.log('Пользователь успешно зарегистрирован');
+    window.location.href = '/login';
+    };
+
   return (
       <BrowserRouter basename="/">
         <Header />
@@ -44,7 +50,7 @@ function App() {
           <Route path="/about" element={<><About /></>}/>
           <Route path="/photos" element={<><Photos /></>}/>
           <Route path="/login" element={<Login onLogin={handleLogin} />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="/register" element={<Register onRegister={handleRegister}/>} />
           <Route path="/logout" element={<Logout onLogout={handleLogout} />} />
           <Route path="/account" element={<Account isAuthenticated={isAuthenticated} />} />
           <Route path="/team" element={<Team isAuthenticated={isAuthenticated} hasTeam={hasTeam}/>} />
