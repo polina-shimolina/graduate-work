@@ -67,6 +67,7 @@ const UserTeamPage = () => {
                 /* const updatedTeamUsers = teamUsers.filter(user => user.user_id !== localStorage.getItem('id'));
                 setTeamUsers(updatedTeamUsers); */
                 console.log('Вы успешно вышли из команды');
+                window.location.reload();
             } else {
                 console.error('Ошибка при выходе из команды');
             }
@@ -82,9 +83,30 @@ const UserTeamPage = () => {
         }
 
         try {
+
+            
+
             const response = await fetch(`/api/user/${username}`);
             if (response.ok) {
                 const userData = await response.json();
+                console.log(userData)
+
+                const teamCheckResponse = await fetch(`/api/user/${userData.id}/team`);
+                if (teamCheckResponse.ok) {
+                    const teamData = await teamCheckResponse.json();
+                    if (teamData.team_id) {
+                        console.log(`Пользователь  уже состоите в команде`);
+                        return;
+                    }
+                } else {
+                    console.error('Ошибка при проверке наличия команды у пользователя');
+                    return;
+                }
+
+                if (userData.team_id) {
+                    console.log(`Пользователь ${username} уже состоит в команде`);
+                    return;
+                }
                 const assignTeamResponse = await fetch(`/api/user/${userData.id}/assign-team`, {
                     method: 'POST',
                     body: JSON.stringify({ team_id: team.team_id }),
@@ -95,6 +117,7 @@ const UserTeamPage = () => {
                 });
                 if (assignTeamResponse.ok) {
                     console.log(`Пользователь ${username} добавлен в команду`);
+                    window.location.reload();
                     // Обновить состояние или показать уведомление об успешном приглашении
                 } else {
                     console.error('Ошибка при назначении команды пользователю');

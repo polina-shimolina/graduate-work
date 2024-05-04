@@ -49,6 +49,7 @@ const NoTeamPage = () => {
             .then(response => {
                 if (response.ok) {
                     console.log('ID команды успешно добавлен в поле team пользователя');
+                    window.location.reload();
                 } else {
                     throw new Error('Ошибка при обновлении поля team пользователя');
                 }
