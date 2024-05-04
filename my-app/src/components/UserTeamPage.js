@@ -42,10 +42,11 @@ const UserTeamPage = () => {
             if (response.ok) {
                 const userData = await response.json();
                 const assignTeamResponse = await fetch(`/api/user/${userData.id}/assign-team`, {
-                    method: 'PUT',
-                    body: JSON.stringify({ teamId: team.id }),
+                    method: 'POST',
+                    body: JSON.stringify({ team_id: team.team_id }),
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
                     }
                 });
                 if (assignTeamResponse.ok) {
@@ -61,6 +62,12 @@ const UserTeamPage = () => {
             console.error('Ошибка при обработке запроса:', error);
         }
     };
+
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
 
     const handleUsernameChange = (event) => {
         setUsername(event.target.value);

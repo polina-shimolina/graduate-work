@@ -16,7 +16,7 @@ from rest_framework.views import APIView, View
 from rest_framework.response import Response
 from rest_framework.status import HTTP_201_CREATED
 from rest_framework.generics import RetrieveUpdateAPIView
-
+import json
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -95,6 +95,7 @@ class UserTeamView(View):
             user_profile = UserProfile.objects.select_related('team').get(user_id=user_id)
             team_data = {
                 'user_id': user_id,
+                'team_id': user_profile.team.id,
                 'team_name': user_profile.team.teamname,
                 'team_description': user_profile.team.description,
                 'team_created_at': user_profile.team.created_at,
@@ -103,3 +104,34 @@ class UserTeamView(View):
             return JsonResponse(team_data)
         except UserProfile.DoesNotExist:
             return JsonResponse({'error': 'User profile not found'}, status=404)
+        
+
+
+class UserProfileView(View):
+    def get(self, request, username):
+        try:
+            user = User.objects.get(username=username)
+            user_data = {
+                'id': user.id,
+                'username': user.username,
+                'email': user.email,
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+            }
+            return JsonResponse(user_data)
+        except User.DoesNotExist:
+            return JsonResponse({'error': 'User not found'}, status=404)
+        
+
+class AssignTeamView(View):
+    def post(self, request, user_id):
+        try:
+            team_id = json.loads(request.body).get('team_id')  # Извлечение данных из тела запроса
+            team = Team.objects.get(id=team_id)
+            user_profile, created = UserProfile.objects.get_or_create(user_id=user_id, defaults={'team': team})
+            if not created:
+                user_profile.team = team
+                user_profile.save()
+            return JsonResponse({'message': 'Team assigned successfully'})
+        except Team.DoesNotExist:
+            return JsonResponse({'error': 'Team not found'}, status=404)
