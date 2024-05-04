@@ -35,6 +35,7 @@ urlpatterns = [
     path('api/token/obtain', TokenObtainPairView.as_view(), name='token_obtain'),
     path('api/token/refresh', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/upload/', views.FileUploadView.as_view(), name='file-upload'),
-    path('api/team/', views.get_team),
+    path('api/team/', views.TeamCreateView.as_view(), name='team-create'),
+    path('api/team/<int:team_id>/users/', views.TeamUsersView.as_view(), name='team_users'),
 ]
  

@@ -4,6 +4,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import my_logo from "../assets/new_map_logo.png";
 
 const Header_Authorised = () => {
+    const username = localStorage.getItem('username');
+
     return(
         <div>
             <header
@@ -17,7 +19,7 @@ const Header_Authorised = () => {
                     <li><Link to="/photos" className="nav-link px-2 link-dark">Попробовать</Link></li>
                     <li><Link to="/about" className="nav-link px-2 link-dark">О сервисе</Link></li>
                     <li><Link to="/team" className="nav-link px-2 link-dark">Моя команда</Link></li>
-                    <li><Link to="/account" className="nav-link px-2 link-dark">Личный кабинет</Link></li>
+                    <li><Link to="/account" className="nav-link px-2 link-dark">{username}</Link></li>
                     <li><Link to="/logout" className="nav-link px-2 link-dark">Выйти</Link></li>
                 </ul>
                 

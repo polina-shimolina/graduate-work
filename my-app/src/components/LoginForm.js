@@ -93,7 +93,7 @@ function Login({ onLogin }) {
         setError(null)
 
 
-        fetch('/api/user/login', {
+        fetch('/api/user', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json;charset=utf-8',
@@ -113,6 +113,7 @@ function Login({ onLogin }) {
           localStorage.setItem('id', data.data.id)
           localStorage.setItem('firstName', data.data.first_name)
           localStorage.setItem('lastName', data.data.last_name)
+          localStorage.setItem('username', data.data.username)
 
       })
       .catch(error => {

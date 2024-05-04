@@ -2,10 +2,32 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './style/UserTeamPage.css'; // Импорт стилей для карточки
 
+
 const UserTeamPage = () => {
     const [team, setTeam] = useState(null);
     const [username, setUsername] = useState('');
+    const [teamUsers, setTeamUsers] = useState([]);
     const navigate = useNavigate();
+
+
+    const fetchTeamUsers = async () => {
+        try {
+            const response = await fetch(`/api/team/${team.team_id}/users`);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch team users for team ${team.team_id}: ${response.status}`);
+            }
+            const data = await response.json();
+            setTeamUsers(data);
+        } catch (error) {
+            console.error('Error fetching team users:', error);
+        }
+    };
+    
+    useEffect(() => {
+        if (team) {
+            fetchTeamUsers();
+        }
+    }, [team]);
 
     const fetchTeamData = async () => {
         try {
@@ -74,8 +96,9 @@ const UserTeamPage = () => {
     };
 
     return (
-        <div className="container mt-4">
-            {team && (
+    <div className="container mt-4">
+        {team && (
+            <div>
                 <div className="d-flex justify-content-between align-items-center mb-3">
                     <div>
                         <h2>Ты в команде "{team.team_name}"</h2>
@@ -88,15 +111,23 @@ const UserTeamPage = () => {
                         <button className="btn btn-danger ml-2">Выйти из команды</button>
                     </div>
                 </div>
-            )}
-            <div className="card mt-3" onClick={handleCardClick}>
-                <div className="card-body card-hover" onClick={handleCardClick}>
-                    <p className="card-text">Здесь будет изображение</p>
-                    <p className="card-text">Автор: Автор изображения</p>
+                <div>
+                    <h3>Наша команда:</h3>
+                    <ul>
+                        {teamUsers.map(user => (
+                            <li key={user.user_id}>{user.user__username} - {user.user__email}</li>                        ))}
+                    </ul>
                 </div>
             </div>
+        )}
+        <div className="card mt-3" onClick={handleCardClick}>
+            <div className="card-body card-hover" onClick={handleCardClick}>
+                <p className="card-text">Здесь будет изображение</p>
+                <p className="card-text">Автор: Автор изображения</p>
+            </div>
         </div>
-    );
+    </div>
+);
 };
 
 export default UserTeamPage;

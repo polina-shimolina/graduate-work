@@ -54,6 +54,7 @@ def user(request):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 @api_view(['POST'])
 def register_user(request):
     username = request.data.get('username')
@@ -135,3 +136,51 @@ class AssignTeamView(View):
             return JsonResponse({'message': 'Team assigned successfully'})
         except Team.DoesNotExist:
             return JsonResponse({'error': 'Team not found'}, status=404)
+        
+    def put(self, request, user_id):
+        try:
+            user_profile = UserProfile.objects.get(user_id=user_id)
+            data = json.loads(request.body)
+            team_id = data.get('team_id')
+            team = Team.objects.get(id=team_id)
+
+            user_profile.team = team
+            user_profile.save()
+            
+            return JsonResponse({'message': f'Team assigned to user {user_id}'})
+        except UserProfile.DoesNotExist:
+            return JsonResponse({'error': 'UserProfile not found'}, status=404)
+        except Team.DoesNotExist:
+            return JsonResponse({'error': 'Team not found'}, status=404)
+        
+
+class TeamUsersView(View):
+    def get(self, request, team_id):
+        try:
+            users = UserProfile.objects.filter(team_id=team_id).values('user_id', 'user__username', 'user__email')
+            users_list = list(users)
+            return JsonResponse(users_list, safe=False)
+        except UserProfile.DoesNotExist:
+            return JsonResponse({'error': 'Team not found'}, status=404)
+        
+
+
+class TeamCreateView(APIView):
+    def post(self, request):
+        serializer = TeamSerializer(data=request.data)
+        if serializer.is_valid():
+            teamname = serializer.validated_data.get('teamname')
+            description = serializer.validated_data.get('description')
+            created_at = serializer.validated_data.get('created_at')
+            creator = serializer.validated_data.get('creator')
+
+            # Создание команды в базе данных
+            team = Team.objects.create(teamname=teamname, description=description, created_at=created_at, creator=creator)
+
+            return Response({'message': 'Команда успешно создана', 'team_id': team.id}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def get(self, request):
+        teams = Team.objects.all()
+        serializer = TeamSerializer(teams, many=True)
+        return Response(serializer.data)
