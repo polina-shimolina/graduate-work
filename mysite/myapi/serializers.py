@@ -20,7 +20,7 @@ class LoginRequestSerializer(Serializer):
 class TeamSerializer(serializers.ModelSerializer):
     class Meta:
         model = Team
-        fields = ['id', 'teamname', 'description', 'created_at', 'creator']
+        fields = '__all__'
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -35,7 +35,7 @@ class UserSerializer(serializers.ModelSerializer):
         profile = UserProfileSerializer()
         class Meta:
            model = User
-           fields = ['username', 'first_name', 'last_name', 'email', 'date_joined', 'profile']
+           fields = ['id', 'username', 'first_name', 'last_name', 'email', 'date_joined', 'profile']
         
         def create(self, validated_data):
             profile_data = validated_data.pop('profile')

@@ -13,6 +13,7 @@ import Team from './components/Team'
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // eslint-disable-next-line
   const [hasTeam, setHasTeam] = useState(true); // Заглушка для hasTeam
 
 
@@ -53,7 +54,7 @@ function App() {
           <Route path="/register" element={<Register onRegister={handleRegister}/>} />
           <Route path="/logout" element={<Logout onLogout={handleLogout} />} />
           <Route path="/account" element={<Account isAuthenticated={isAuthenticated} />} />
-          <Route path="/team" element={<Team isAuthenticated={isAuthenticated} hasTeam={hasTeam}/>} />
+          <Route path="/team" element={<Team isAuthenticated={isAuthenticated}/>} />
         </Routes>
         <Footer/>
       </BrowserRouter>

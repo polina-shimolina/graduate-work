@@ -1,10 +1,38 @@
-import UserTeamPage from './UserTeamPage'
+import React, { useState, useEffect } from 'react';
+import UserTeamPage from './UserTeamPage';
 import NoTeamPage from './NoTeamPage';
 
-const Team = ({ hasTeam }) => {
+const Team = ({ isAuthenticated }) => {
+    const [hasTeam, setHasTeam] = useState(false);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch(
+                    '/api/user/',
+                    {
+                    headers: {
+                      'Content-Type': 'application/json;charset=utf-8',
+                      'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                    },
+                  }
+                );
+                
+                const data = await response.json();
+                if (data.data.profile.team !== null) {
+                    setHasTeam(true);
+                }
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
     return (
         <div className="container mt-4">
-            {hasTeam ? <UserTeamPage /> : <NoTeamPage />}
+            {isAuthenticated ? (hasTeam ? <UserTeamPage /> : <NoTeamPage />) : null}
         </div>
     );
 };

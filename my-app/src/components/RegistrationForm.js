@@ -8,13 +8,14 @@ function Register({ onRegister }) {
   const [formLastname, setFormLastname] = useState('');
   const [formPassword, setFormPassword] = useState('');
   const [formEmail, setFormEmail] = useState('');
+  // eslint-disable-next-line
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const submitHandler = (e) => {
     e.preventDefault();
     setLoading(true);
-    fetch('/api/register', {
+    fetch('/api/user/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

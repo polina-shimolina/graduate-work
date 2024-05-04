@@ -4,61 +4,25 @@ import { useNavigate } from 'react-router-dom';
 
 
 function Login({ onLogin }) {
-  const [access, setAccess] = useState(localStorage.getItem('accessToken'))
+  const [access, setAccess] = useState()
   const [refresh, setRefresh] = useState(localStorage.getItem('refreshToken'))
   const [refreshRequired, setRefreshRequired] = useState(false)
   const [loading, setLoading] = useState()
   const [formUsername, setFormUsername] = useState()
   const [formPassword, setFormPassword] = useState()
+  const [userId, setUserId] = useState('')
+  // eslint-disable-next-line
   const [firstName, setFirstName] = useState('');
+  // eslint-disable-next-line
   const [lastName, setLastName] = useState('');
+  // eslint-disable-next-line
   const [username, setUsername] = useState('');
+  // eslint-disable-next-line
   const [email, setEmail] = useState('');
+  // eslint-disable-next-line
   const [dateJoined, setDateJoined] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
-
-
-  useEffect(() => {
-    if (access) {
-      fetch(
-          '/api/user',
-          {
-          headers: {
-            'Content-Type': 'application/json;charset=utf-8',
-            'Authorization': `Bearer ${access}`,
-          },
-        }
-      )
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          if (response.status === 401) {
-            throw Error('refresh')
-          }
-          throw Error(`Something went wrong: code ${response.status}`);
-        }
-      })
-      .then(({ data }) => {
-        setFirstName(data.first_name);
-        setLastName(data.last_name);
-        setUsername(data.username);
-        setEmail(data.email);
-        setDateJoined(data.date_joined);
-        setError(null)
-      })
-      .catch(error => {
-        if (error.message === 'refresh') {
-          setRefreshRequired(true)
-        } else {
-          console.log(error)
-          setError('Ошибка, подробности в консоли')
-        }
-      })
-    } 
-  }, [access])
-
 
 
   useEffect(() => {
@@ -86,6 +50,7 @@ function Login({ onLogin }) {
         localStorage.setItem('refreshToken', refresh)
         setRefresh(refresh)
         setError(null)
+        
       })
       .catch(error => {
         console.log(error)
@@ -93,6 +58,7 @@ function Login({ onLogin }) {
       })
     }
   }, [refreshRequired])
+
 
   
   const submitHandler = e => {
@@ -120,10 +86,39 @@ function Login({ onLogin }) {
       })
       .then(({access, refresh}) => {
         localStorage.setItem('accessToken', access)
+        console.log(access)
         setAccess(access)
         localStorage.setItem('refreshToken', refresh)
         setRefresh(refresh)
         setError(null)
+
+
+        fetch('/api/user/login', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json;charset=utf-8',
+            'Authorization': `Bearer ${access}`,
+          },
+      })
+      .then(response => {
+          if (response.ok) {
+              return response.json();
+          } else {
+              throw new Error(`Something went wrong: code ${response.status}`);
+          }
+      })
+      .then(data => {
+          console.log(data.data.id);
+          setUserId(data.data.id);
+          localStorage.setItem('id', data.data.id)
+          localStorage.setItem('firstName', data.data.first_name)
+          localStorage.setItem('lastName', data.data.last_name)
+
+      })
+      .catch(error => {
+          console.log(error);
+          setError('Ошибка при получении id');
+      });
 
         onLogin()
         
@@ -137,6 +132,7 @@ function Login({ onLogin }) {
     }
     
     
+
   return (
     <div className="App">
       {error? <p>{error}</p> : null}

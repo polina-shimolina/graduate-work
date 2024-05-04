@@ -26,12 +26,13 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path('', include('myapi.urls')),
     path('api/user/', views.user, name='user'),
-    path('api/login', views.login, name='login'),
-    path('api/register', views.register_user, name='register'),
+    path('api/user/<int:pk>/', views.UserDetail.as_view(), name='author-detail'),
+    path('api/user/<int:user_id>/team', views.UserTeamView.as_view(), name='user_team'),
+    path('api/user/login', views.user, name='login'),
+    path('api/user/register', views.register_user, name='register'),
     path('api/token/obtain', TokenObtainPairView.as_view(), name='token_obtain'),
     path('api/token/refresh', TokenRefreshView.as_view(), name='token_refresh'),
-    #path('api/user/update/', views.UpdateUserView.as_view()),
     path('api/upload/', views.FileUploadView.as_view(), name='file-upload'),
-
+    path('api/team/', views.get_team),
 ]
  

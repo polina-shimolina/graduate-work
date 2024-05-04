@@ -9,7 +9,6 @@ const NoTeamPage = () => {
     };
 
     const handleCreateTeamSubmit = () => {
-        // Здесь можно добавить логику для создания команды
         console.log('Создание команды:', teamName);
         setShowModal(false);
     };

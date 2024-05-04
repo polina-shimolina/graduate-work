@@ -100,7 +100,7 @@ const handleSave = async () => {
             const updatedUserData = await response.json();
             console.log('GotResponse')
 
-            setUserData(updatedUserData); // Обновление состояния userData
+            setUserData(updatedUserData);
             console.log('StateUpdated')
 
             setEditMode(false);

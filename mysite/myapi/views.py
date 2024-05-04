@@ -1,6 +1,6 @@
 from rest_framework import viewsets, permissions, generics
-from .serializers import UploadedFileSerializer, UserSerializer, UserProfileSerializer
-from .models import UploadedFile
+from .serializers import UploadedFileSerializer, UserSerializer, UserProfileSerializer, TeamSerializer
+from .models import UploadedFile, Team, UserProfile
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -12,10 +12,10 @@ from myapi.serializers import UserSerializer, LoginRequestSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.contrib.auth import authenticate, login, logout
-from rest_framework.views import APIView
+from rest_framework.views import APIView, View
 from rest_framework.response import Response
 from rest_framework.status import HTTP_201_CREATED
-
+from rest_framework.generics import RetrieveUpdateAPIView
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -77,3 +77,29 @@ class UpdateUserView(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['GET'])
+def get_team(request):
+    teams = Team.objects.all()
+    serializer = TeamSerializer(teams, many=True)
+    return Response(serializer.data)
+
+
+class UserDetail(RetrieveUpdateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+class UserTeamView(View):
+    def get(self, request, user_id):
+        try:
+            user_profile = UserProfile.objects.select_related('team').get(user_id=user_id)
+            team_data = {
+                'user_id': user_id,
+                'team_name': user_profile.team.teamname,
+                'team_description': user_profile.team.description,
+                'team_created_at': user_profile.team.created_at,
+                'team_creator': user_profile.team.creator.username,
+            }
+            return JsonResponse(team_data)
+        except UserProfile.DoesNotExist:
+            return JsonResponse({'error': 'User profile not found'}, status=404)
