@@ -152,7 +152,16 @@ class AssignTeamView(View):
             return JsonResponse({'error': 'UserProfile not found'}, status=404)
         except Team.DoesNotExist:
             return JsonResponse({'error': 'Team not found'}, status=404)
-        
+    
+    def delete(self, request, user_id):
+        try:
+            user_profile = UserProfile.objects.get(user_id=user_id)
+            user_profile.team = None
+            user_profile.save()
+            
+            return JsonResponse({'message': f'User {user_id} removed from team'})
+        except UserProfile.DoesNotExist:
+            return JsonResponse({'error': 'UserProfile not found'}, status=404)
 
 class TeamUsersView(View):
     def get(self, request, team_id):

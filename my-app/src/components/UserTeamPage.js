@@ -52,6 +52,28 @@ const UserTeamPage = () => {
         console.log('Переход на другую страницу');
         navigate('/photos');
     };
+    
+    const handleLeaveTeamClick = async () => {
+        try {
+            const response = await fetch(`/api/user/${localStorage.getItem('id')}/assign-team`, {
+                method: 'DELETE',
+                body: JSON.stringify({ team_id: null }),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                }
+            });
+            if (response.ok) {
+                /* const updatedTeamUsers = teamUsers.filter(user => user.user_id !== localStorage.getItem('id'));
+                setTeamUsers(updatedTeamUsers); */
+                console.log('Вы успешно вышли из команды');
+            } else {
+                console.error('Ошибка при выходе из команды');
+            }
+        } catch (error) {
+            console.error('Ошибка при обработке запроса:', error);
+        }
+    };
 
     const handleInviteClick = async () => {
         if (!username) {
@@ -108,7 +130,7 @@ const UserTeamPage = () => {
                     <div>
                         <input type="text" placeholder="Введите юзернейм" value={username} onChange={handleUsernameChange} />
                         <button className="btn btn-primary ml-2" onClick={handleInviteClick}>Пригласить в команду</button>
-                        <button className="btn btn-danger ml-2">Выйти из команды</button>
+                        <button className="btn btn-danger ml-2" onClick={handleLeaveTeamClick}>Выйти из команды</button>
                     </div>
                 </div>
                 <div>
