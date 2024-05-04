@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FaPen } from 'react-icons/fa';
+import { FaPen, FaTimes } from 'react-icons/fa';
 import './style/Account.css'; // Файл со стилями
 
 function Account({ isAuthenticated }) {
@@ -8,13 +8,14 @@ function Account({ isAuthenticated }) {
     const [editMode, setEditMode] = useState(false);
     const [editedFirstName, setEditedFirstName] = useState('');
     const [editedLastName, setEditedLastName] = useState('');
+    const [editedEmail, setEditedEmail] = useState('');
 
     useEffect(() => {
         const fetchUserData = async () => {
             if (isAuthenticated) {
                 try {
                     const response = await fetch(
-                      '/api/user',
+                      '/api/user/',
                       {
                       headers: {
                         'Content-Type': 'application/json;charset=utf-8',
@@ -23,6 +24,7 @@ function Account({ isAuthenticated }) {
                     }
                   );
                     if (response.ok) {
+                        console.log('OK')
                         const userDataFromApi = await response.json();
                         setUserData(userDataFromApi);
                     } else if (response.status === 401) {
@@ -69,28 +71,41 @@ function Account({ isAuthenticated }) {
   }, [refreshRequired]);
 
   const handleEdit = () => {
+    console.log('EditStarted')
     setEditMode(true);
     setEditedFirstName(userData.data.first_name);
     setEditedLastName(userData.data.last_name);
+    setEditedEmail(userData.data.email);
+
 };
 
 const handleSave = async () => {
     try {
-        const response = await fetch('/api/user/update/', {
+        const response = await fetch('/api/user/', {
             method: 'PUT',
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json;charset=utf-8',
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
             body: JSON.stringify({
                 first_name: editedFirstName,
                 last_name: editedLastName,
+                email: editedEmail,
             }),
         });
+
         if (response.ok) {
+            console.log('EditFinishingStarted')
+
             const updatedUserData = await response.json();
-            setUserData(updatedUserData);
+            console.log('GotResponse')
+
+            setUserData(updatedUserData); // Обновление состояния userData
+            console.log('StateUpdated')
+
             setEditMode(false);
+            console.log('EditFinished')
+
         } else {
             console.error('Failed to update user data');
         }
@@ -98,6 +113,8 @@ const handleSave = async () => {
         console.error('Error updating user data:', error);
     }
 };
+
+
 
 return (
     <div className="text-center">
@@ -109,35 +126,59 @@ return (
                         <div>
                             {editMode ? (
                                 <>
-                                    <h4 className="card-subtitle mb-3 text-muted">Отредактируй свой профиль</h4>
-                                    <div className="mb-3 text-center">
-                                        <input
-                                            type="text"
-                                            placeholder="Имя"
-                                            value={editedFirstName}
-                                            onChange={(e) => setEditedFirstName(e.target.value)}
-                                        />
+                                    <div className="container">
+                                        <h4 className="card-subtitle mb-3 text-muted">Отредактируй свой профиль</h4>
+                                        <div className="row justify-content-center">
+                                            <div className="col-md-6">
+                                                <div className="mb-3">
+                                                    <input
+                                                        type="text"
+                                                        className="form-control"
+                                                        id="firstName"
+                                                        placeholder="Имя"
+                                                        value={editedFirstName}
+                                                        onChange={(e) => setEditedFirstName(e.target.value)}
+                                                    />
+                                                </div>
+                                                <div className="mb-3">
+                                                    <input
+                                                        type="text"
+                                                        className="form-control"
+                                                        id="lastName"
+                                                        placeholder="Фамилия"
+                                                        value={editedLastName}
+                                                        onChange={(e) => setEditedLastName(e.target.value)}
+                                                    />
+                                                </div>
+                                                <div className="mb-3">
+                                                    <input
+                                                        type="email"
+                                                        className="form-control"
+                                                        id="email"
+                                                        placeholder="Email"
+                                                        value={editedEmail}
+                                                        onChange={(e) => setEditedEmail(e.target.value)}
+                                                    />
+                                                </div>
+                                                <div className="d-flex justify-content-between">
+                                                    <button onClick={handleSave} className="btn btn-secondary" style={{ marginRight: '10px' }}>Сохранить</button>
+                                                    <button onClick={() => setEditMode(false)} className="btn btn-secondary">Отмена <FaTimes /></button>
+                                                </div>                                         
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className="mb-3 text-center">
-                                        <input
-                                            type="text"
-                                            placeholder="Фамилия"
-                                            value={editedLastName}
-                                            onChange={(e) => setEditedLastName(e.target.value)}
-                                        />
-                                    </div>
-                                    <button onClick={handleSave}>Сохранить</button>
+
                                 </>
                             ) : (
                                 <>
                                     <div className="card-container">
-                                    <h4 className="card-subtitle mb-3 text-muted">Твой профиль</h4>
-                                    <p className="card-text text-center">Имя пользователя: {userData.data.username}</p>
-                                    <p className="card-text text-center">Email: {userData.data.email}</p>
-                                    <p className="card-text text-center">Дата регистрации: {new Date(userData.data.date_joined).toLocaleDateString()}</p>
-                                    <button onClick={handleEdit} className="edit-button">
-                                        <FaPen className="edit-icon" />
-                                    </button>
+                                        <h4 className="card-subtitle mb-4 text-muted">Ваш профиль</h4>
+                                        <p className="card-text ">Имя пользователя: {userData.data.username}</p>
+                                        <p className="card-text ">Email: {userData.data.email}</p>
+                                        <p className="card-text">Вы зарегистрировались {new Date(userData.data.date_joined).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' })}</p>                                        
+                                        <button onClick={handleEdit} className="edit-button">
+                                            <FaPen className="edit-icon" />
+                                        </button>
                                     </div>
                                 </>
                             )}
@@ -150,8 +191,6 @@ return (
         )}
     </div>
 );
-
-
 
 };
 

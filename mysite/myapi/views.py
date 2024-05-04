@@ -38,13 +38,21 @@ class FileUploadView(APIView):
         return Response({'message': 'Файл успешно загружен'})
     
 
-@api_view()
+@api_view(['GET', 'PUT'])
 @permission_classes([IsAuthenticated])
 @authentication_classes([JWTAuthentication])
-def user(request: Request):
-    return Response({
-        'data': UserSerializer(request.user).data
-    })
+def user(request):
+    if request.method == 'GET':
+        return Response({
+            'data': UserSerializer(request.user).data
+        })
+    elif request.method == 'PUT':
+        user = User.objects.get(id=request.user.id)
+        serializer = UserSerializer(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 def register_user(request):
