@@ -1,0 +1,896 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Сервис сегментации изображений - OpenAPI 3.0",
+    "description": "API предоставляет возможности управления пользователями, аутентификацией, загрузкой файлов и командами.\nДля получения дополнительной информации и примеров использования обратитесь к репозиторию на GitHub: [GitHub Repository](https://github.com/polina-shimolina/graduate-work)",
+    "version": "1.0.11"
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:8000/api/"
+    }
+  ],
+  "tags": [
+    {
+      "name": "user",
+      "description": "Операции с пользователями"
+    },
+    {
+      "name": "auth",
+      "description": "Аутентификация и авторизация"
+    },
+    {
+      "name": "photo",
+      "description": "Операции с изображениями"
+    },
+    {
+      "name": "team",
+      "description": "Операции с командами"
+    }
+  ],
+  "paths": {
+    "/user/login": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Получить список пользователей",
+        "responses": {
+          "200": {
+            "description": "Успешный запрос",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/register/": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Зарегистрировать нового пользователя",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "first_name": {
+                    "type": "string"
+                  },
+                  "last_name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "username",
+                  "password"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Пользователь успешно зарегистрирован",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Некорректный запрос или ошибка при регистрации"
+          }
+        }
+      }
+    },
+    "/user/{id}/": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Получить информацию о пользователе",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID пользователя",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успешный запрос",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Обновить информацию о пользователе",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID пользователя",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Успешное обновление",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Некорректный запрос"
+          }
+        }
+      }
+    },
+    "/user/{username}": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Получить информацию о пользователе по имени пользователя",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "description": "Имя пользователя",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успешный запрос",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Пользователь не найден"
+          }
+        }
+      }
+    },
+    "/user/{user_id}/team": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Получить информацию о команде пользователя по ID пользователя",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "ID пользователя",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успешный запрос",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Team"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Профиль пользователя не найден"
+          }
+        }
+      }
+    },
+    "/user/{user_id}/assign-team": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Назначить команду пользователю",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "ID пользователя",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "team_id": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Успешное назначение команды",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Команда не найдена"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Обновить команду пользователя",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "ID пользователя",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "team_id": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Успешное обновление команды пользователя",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Профиль пользователя или команда не найдены"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Удалить пользователя из команды",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "ID пользователя",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Пользователь успешно удален из команды",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Профиль пользователя не найден"
+          }
+        }
+      }
+    },
+    "/token/obtain": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Получить пару токенов для аутентификации",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Успешное получение токенов",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "access_token": {
+                      "type": "string"
+                    },
+                    "refresh_token": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/token/refresh": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Обновить access токен с помощью refresh токена",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "refresh_token": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Успешное обновление токена",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "access_token": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/photo/upload/": {
+      "post": {
+        "tags": [
+          "photo"
+        ],
+        "summary": "Загрузить фото пользователя",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Фото успешно загружено",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "uploaded_photo": {
+                      "type": "integer"
+                    },
+                    "segmented_photo": {
+                      "type": "integer"
+                    },
+                    "user": {
+                      "type": "integer"
+                    },
+                    "is_visible_to_team": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Ошибка валидации данных при загрузке фото"
+          }
+        }
+      }
+    },
+    "/team/": {
+      "post": {
+        "tags": [
+          "team"
+        ],
+        "summary": "Создать новую команду",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "teamname": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "creator": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Команда успешно создана",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "team_id": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Ошибка валидации данных при создании команды"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "team"
+        ],
+        "summary": "Получить список всех команд",
+        "responses": {
+          "200": {
+            "description": "Список всех команд",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "teamname": {
+                        "type": "string"
+                      },
+                      "description": {
+                        "type": "string"
+                      },
+                      "created_at": {
+                        "type": "string"
+                      },
+                      "creator": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/team/{team_id}/users/": {
+      "get": {
+        "tags": [
+          "team"
+        ],
+        "summary": "Получить список пользователей в команде",
+        "parameters": [
+          {
+            "name": "team_id",
+            "in": "path",
+            "description": "ID команды",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Список пользователей в команде",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "user_id": {
+                        "type": "integer"
+                      },
+                      "username": {
+                        "type": "string"
+                      },
+                      "email": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Команда не найдена"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "username": {
+            "type": "string"
+          },
+          "first_name": {
+            "type": "string"
+          },
+          "last_name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "date_joined": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "profile": {
+            "$ref": "#/components/schemas/UserProfile"
+          }
+        },
+        "required": [
+          "id",
+          "username",
+          "email",
+          "date_joined"
+        ]
+      },
+      "UserProfile": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "username": {
+                "type": "string"
+              },
+              "first_name": {
+                "type": "string"
+              },
+              "last_name": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              },
+              "date_joined": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "username",
+              "email",
+              "date_joined"
+            ]
+          },
+          "team": {
+            "type": "object",
+            "properties": {
+              "team_id": {
+                "type": "integer"
+              },
+              "teamname": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "created_at": {
+                "type": "string"
+              },
+              "creator": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "team_id",
+              "teamname",
+              "created_at",
+              "creator"
+            ]
+          }
+        },
+        "required": [
+          "user",
+          "team"
+        ]
+      },
+      "Team": {
+        "type": "object",
+        "properties": {
+          "team_id": {
+            "type": "integer"
+          },
+          "teamname": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "creator": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "username": {
+                "type": "string"
+              },
+              "first_name": {
+                "type": "string"
+              },
+              "last_name": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              },
+              "date_joined": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "username",
+              "email",
+              "date_joined"
+            ]
+          }
+        },
+        "required": [
+          "team_id",
+          "teamname",
+          "created_at",
+          "creator"
+        ]
+      },
+      "UserPhoto": {
+        "type": "object",
+        "properties": {
+          "photo_id": {
+            "type": "integer"
+          },
+          "uploaded_photo": {
+            "type": "object",
+            "properties": {
+              "photo_id": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "photo_id"
+            ]
+          },
+          "segmented_photo": {
+            "type": "object",
+            "properties": {
+              "photo_id": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "photo_id"
+            ]
+          },
+          "user_id": {
+            "type": "integer"
+          },
+          "is_visible_to_team": {
+            "type": "boolean"
+          }
+        }
+      },
+      "UploadedPhoto": {
+        "type": "object",
+        "properties": {
+          "photo_id": {
+            "type": "integer"
+          },
+          "file": {
+            "type": "string",
+            "format": "binary"
+          },
+          "uploaded_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "SegmentedPhoto": {
+        "type": "object",
+        "properties": {
+          "photo_id": {
+            "type": "integer"
+          },
+          "photo": {
+            "type": "string",
+            "format": "binary"
+          }
+        }
+      }
+    }
+  }
+}

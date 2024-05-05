@@ -53,7 +53,7 @@ function App() {
           <Route path="/login" element={<Login onLogin={handleLogin} />} />
           <Route path="/register" element={<Register onRegister={handleRegister}/>} />
           <Route path="/logout" element={<Logout onLogout={handleLogout} />} />
-          <Route path="/account" element={<Account isAuthenticated={isAuthenticated} />} />
+          <Route path="/profile" element={<Account isAuthenticated={isAuthenticated} />} />
           <Route path="/team" element={<Team isAuthenticated={isAuthenticated}/>} />
         </Routes>
         <Footer/>

@@ -106,21 +106,7 @@ class UserDetail(RetrieveUpdateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-class UserTeamView(View):
-    def get(self, request, user_id):
-        try:
-            user_profile = UserProfile.objects.select_related('team').get(user_id=user_id)
-            team_data = {
-                'user_id': user_id,
-                'team_id': user_profile.team.id,
-                'team_name': user_profile.team.teamname,
-                'team_description': user_profile.team.description,
-                'team_created_at': user_profile.team.created_at,
-                'team_creator': user_profile.team.creator.username,
-            }
-            return JsonResponse(team_data)
-        except UserProfile.DoesNotExist:
-            return JsonResponse({'error': 'User profile not found'}, status=404)
+
         
 
 
@@ -139,8 +125,23 @@ class UserProfileView(View):
         except User.DoesNotExist:
             return JsonResponse({'error': 'User not found'}, status=404)
         
-
-class AssignTeamView(View):
+    
+class UserTeamView(View):
+    def get(self, request, user_id):
+        try:
+            user_profile = UserProfile.objects.select_related('team').get(user_id=user_id)
+            team_data = {
+                'user_id': user_id,
+                'team_id': user_profile.team.id,
+                'team_name': user_profile.team.teamname,
+                'team_description': user_profile.team.description,
+                'team_created_at': user_profile.team.created_at,
+                'team_creator': user_profile.team.creator.username,
+            }
+            return JsonResponse(team_data)
+        except UserProfile.DoesNotExist:
+            return JsonResponse({'error': 'User profile not found'}, status=404)
+    
     def post(self, request, user_id):
         try:
             team_id = json.loads(request.body).get('team_id')  # Извлечение данных из тела запроса
@@ -190,7 +191,7 @@ class TeamUsersView(View):
         
 
 
-class TeamCreateView(APIView):
+class TeamView(APIView):
     def post(self, request):
         serializer = TeamSerializer(data=request.data)
         if serializer.is_valid():

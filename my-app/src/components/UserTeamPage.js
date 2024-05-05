@@ -107,7 +107,7 @@ const UserTeamPage = () => {
                     console.log(`Пользователь ${username} уже состоит в команде`);
                     return;
                 }
-                const assignTeamResponse = await fetch(`/api/user/${userData.id}/assign-team`, {
+                const assignTeamResponse = await fetch(`/api/user/${userData.id}/team/`, {
                     method: 'POST',
                     body: JSON.stringify({ team_id: team.team_id }),
                     headers: {

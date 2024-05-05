@@ -34,10 +34,10 @@ const NoTeamPage = () => {
             throw new Error('Ошибка при создании команды');
         })
         .then(data => {
-            console.log('Коsманда успешно создана:', data);
+            console.log('Команда успешно создана:', data);
             console.log(data.id)
             // Добавляем ID команды в поле 'team' пользователя
-            fetch(`/api/user/${userId}/assign-team`, {
+            fetch(`/api/user/${userId}/team/`, {
                 method: 'POST',
                 body: JSON.stringify({ team_id: data.team_id }),
                 headers: {
