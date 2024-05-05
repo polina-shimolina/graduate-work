@@ -1,5 +1,5 @@
 from rest_framework import viewsets, permissions, generics
-from .serializers import UploadedFileSerializer, UserSerializer, UserProfileSerializer, TeamSerializer
+from .serializers import UploadedFileSerializer, UserSerializer, UserProfileSerializer, TeamSerializer, SegmentedPhotoSerializer, UserPhotoSerializer
 from .models import UploadedFile, Team, UserProfile
 from django.contrib.auth.models import User
 from django.http import JsonResponse
@@ -24,18 +24,32 @@ class UserViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]  # Разрешите доступ всем
     
 
-class FileUploadView(APIView):
+class UploadPhotoView(APIView):
     def post(self, request):
-        file_obj = request.data.get('file')
-        if not file_obj:
-            return Response({'error': 'Файл не был загружен'}, status=400)
-        
-        uploaded_file = UploadedFile(file=file_obj)
-        uploaded_file.save()
+        segmented_photo_serializer = SegmentedPhotoSerializer(data=request.data)
+        if segmented_photo_serializer.is_valid():
+            segmented_photo = segmented_photo_serializer.save()
 
-        serializer = UploadedFileSerializer(uploaded_file)
+            uploaded_photo_data = {
+                'photo': request.data['file']
+            }
+            uploaded_photo_serializer = UploadedFileSerializer(data=uploaded_photo_data)
+            if uploaded_photo_serializer.is_valid():
+                uploaded_photo = uploaded_photo_serializer.save()
 
-        return Response({'message': 'Файл успешно загружен'})
+                user_photo_data = {
+                    'uploaded_photo': uploaded_photo.id,
+                    'segmented_photo': segmented_photo.id,
+                    'user': request.user.id,
+                    'is_visible_to_team': False
+                }
+                user_photo_serializer = UserPhotoSerializer(data=user_photo_data)
+                if user_photo_serializer.is_valid():
+                    user_photo_serializer.save()
+                    return Response(user_photo_serializer.data, status=status.HTTP_201_CREATED)
+                return Response(user_photo_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(uploaded_photo_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(segmented_photo_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
 @api_view(['GET', 'PUT'])

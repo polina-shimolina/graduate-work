@@ -10,7 +10,7 @@ class SegmentedPhoto(models.Model):
     photo = models.ImageField(upload_to='segmented/')
 
 class UserPhoto(models.Model):
-    uploaded_photo = models.ImageField(upload_to='photos/')
+    uploaded_photo = models.OneToOneField(UploadedFile, on_delete=models.CASCADE)
     segmented_photo = models.OneToOneField(SegmentedPhoto, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     is_visible_to_team = models.BooleanField(default=False)
