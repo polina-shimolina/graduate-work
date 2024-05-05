@@ -11,14 +11,19 @@ function Register({ onRegister }) {
   // eslint-disable-next-line
   const [error, setError] = useState('');
   const navigate = useNavigate();
-
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+}
   const submitHandler = (e) => {
     e.preventDefault();
     setLoading(true);
-    fetch('/api/user/register', {
+    fetch('/api/user/register/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'X-CSRFToken': getCookie('csrftoken')
       },
       body: JSON.stringify({
         username: formUsername,
