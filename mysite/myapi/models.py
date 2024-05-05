@@ -6,6 +6,15 @@ class UploadedFile(models.Model):
     file = models.FileField(upload_to='uploads/')
     uploaded_at = models.DateTimeField(auto_now_add=True)
     
+class SegmentedPhoto(models.Model):
+    photo = models.ImageField(upload_to='segmented/')
+
+class UserPhoto(models.Model):
+    uploaded_photo = models.ImageField(upload_to='photos/')
+    segmented_photo = models.OneToOneField(SegmentedPhoto, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    is_visible_to_team = models.BooleanField(default=False)
+
 class Team(models.Model):
     teamname = models.CharField(max_length=100)
     description = models.TextField()
