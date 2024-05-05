@@ -31,7 +31,7 @@ class UploadPhotoView(APIView):
             segmented_photo = segmented_photo_serializer.save()
 
             uploaded_photo_data = {
-                'photo': request.data['file']
+                'photo': request.FILES['file']
             }
             uploaded_photo_serializer = UploadedFileSerializer(data=uploaded_photo_data)
             if uploaded_photo_serializer.is_valid():

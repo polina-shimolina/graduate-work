@@ -9,11 +9,8 @@ const Photos = () => {
     formData.append('file', selectedFile);
   
     try {
-      const response = await fetch('/api/photo/upload', {
+      const response = await fetch('/api/photo/upload/', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json;charset=utf-8',
-        },
         body: formData
       });
   
