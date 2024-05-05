@@ -11,9 +11,8 @@ mysite - back на джанго
 
 # Структура проекта
 
-graduate-work/
-
 ```
+graduate-work/
 │
 ├── notebook/
 ├── документация/  (React приложение)
