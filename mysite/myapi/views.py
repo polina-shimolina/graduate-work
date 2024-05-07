@@ -1,6 +1,6 @@
 from rest_framework import viewsets, permissions, generics
 from .serializers import UploadedPhotoSerializer, UserSerializer, UserProfileSerializer, TeamSerializer, SegmentedPhotoSerializer, UserPhotoSerializer
-from .models import UploadedPhoto, Team, UserProfile
+from .models import UploadedPhoto, Team, UserProfile, UserPhoto
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -26,30 +26,16 @@ class UserViewSet(viewsets.ModelViewSet):
 
 class UploadPhotoView(APIView):
     def post(self, request):
-        segmented_photo_serializer = SegmentedPhotoSerializer(data=request.data)
-        if segmented_photo_serializer.is_valid():
-            segmented_photo = segmented_photo_serializer.save()
-
-            uploaded_photo_data = {
-                'photo': request.FILES['file']
-            }
-            uploaded_photo_serializer = UploadedPhotoSerializer(data=uploaded_photo_data)
-            if uploaded_photo_serializer.is_valid():
-                uploaded_photo = uploaded_photo_serializer.save()
-
-                user_photo_data = {
-                    'uploaded_photo': uploaded_photo.id,
-                    'segmented_photo': segmented_photo.id,
-                    'user': request.user.id,
-                    'is_visible_to_team': False
-                }
-                user_photo_serializer = UserPhotoSerializer(data=user_photo_data)
-                if user_photo_serializer.is_valid():
-                    user_photo_serializer.save()
-                    return Response(user_photo_serializer.data, status=status.HTTP_201_CREATED)
-                return Response(user_photo_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-            return Response(uploaded_photo_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        return Response(segmented_photo_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer = UploadedPhotoSerializer(data=request.data)
+        if serializer.is_valid():
+            uploaded_photo = serializer.save()
+            user = request.user
+            user_photo = UserPhoto.objects.create(uploaded_photo=uploaded_photo, user=user)
+            # Временно присваиваем segmented_photo ссылку на uploaded_photo
+            user_photo.segmented_photo = uploaded_photo
+            user_photo.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
 @api_view(['GET', 'PUT'])

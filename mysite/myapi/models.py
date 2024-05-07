@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 class UploadedPhoto(models.Model):
-    file = models.FileField(upload_to='uploads/')
+    file = models.ImageField(upload_to='uploads/')
     
 class SegmentedPhoto(models.Model):
     photo = models.ImageField(upload_to='segmented/')

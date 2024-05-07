@@ -1,8 +1,11 @@
 from django.contrib import admin
 # Register your models here.
 
-from .models import UploadedPhoto, Team, UserProfile
+from .models import UploadedPhoto, Team, UserProfile, SegmentedPhoto, UserPhoto, Comment
 
 admin.site.register(UploadedPhoto)
+admin.site.register(SegmentedPhoto)
+admin.site.register(UserPhoto)
+admin.site.register(Comment)
 admin.site.register(Team)
 admin.site.register(UserProfile)
