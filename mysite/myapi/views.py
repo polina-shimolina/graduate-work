@@ -16,6 +16,7 @@ from rest_framework.views import APIView, View
 from rest_framework.response import Response
 from rest_framework.generics import RetrieveUpdateAPIView
 import json
+import logging
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -25,16 +26,32 @@ class UserViewSet(viewsets.ModelViewSet):
 
 class UploadPhotoView(APIView):
     def post(self, request):
+        logger = logging.getLogger(__name__)
+        logger.info("Starting post method")
         serializer = UploadedPhotoSerializer(data=request.data)
+        logger.info("Checking if serializer is valid")
+        if not serializer.is_valid():
+            errors = serializer.errors
+            logger.info("Errors: %s", errors) 
         if serializer.is_valid():
+            logger.info("Serializer is valid")
             uploaded_photo = serializer.save()
+            logger.info("Uploaded photo saved")
             user = request.user
+            logger.info("User retrieved")
             user_photo = UserPhoto.objects.create(uploaded_photo=uploaded_photo, user=user)
+            logger.info("User photo created")
             # Временно присваиваем segmented_photo ссылку на uploaded_photo
             user_photo.segmented_photo = uploaded_photo
             user_photo.save()
+            logger.info("User photo saved")
+            logger.info("Returning response with status 201 Created")
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            logger.error("Serializer is not valid")
+            logger.error(serializer.errors)
+            logger.error("Returning response with status 400 Bad Request")
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
 @api_view(['GET', 'PUT'])

@@ -5,6 +5,10 @@ const Photos = () => {
   const [selectedFile, setSelectedFile] = useState();
 
   const handleUploadFile = async () => {
+    if (!selectedFile) {
+      console.error('Файл не был выбран');
+      return;
+    }
     const formData = new FormData();
     formData.append('photo', selectedFile);
 
@@ -12,7 +16,7 @@ const Photos = () => {
       const response = await fetch('/api/photo/upload/', {
         method: 'POST',
         headers: {
-          'Content-Type': 'multipart/form-data',
+          'Content-Type': `multipart/form-data; boundary= ${formData.boundary}`,
           'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
       },
         body: formData,
