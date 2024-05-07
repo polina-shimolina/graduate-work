@@ -11,7 +11,11 @@ const Photos = () => {
     }
     const formData = new FormData();
     formData.append('photo', selectedFile);
-
+    if (formData.has('photo')) {
+      console.log('В объекте formData есть данные по ключу "photo"');
+    } else {
+      console.log('В объекте formData нет данных по ключу "photo"');
+    }
     try {
       const response = await fetch('/api/photo/upload/', {
         method: 'POST',

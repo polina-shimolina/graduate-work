@@ -19,7 +19,7 @@ const Header_Authorised = () => {
                     <li><Link to="/photos" className="nav-link px-2 link-dark">Попробовать</Link></li>
                     <li><Link to="/about" className="nav-link px-2 link-dark">О сервисе</Link></li>
                     <li><Link to="/team" className="nav-link px-2 link-dark">Моя команда</Link></li>
-                    <li><Link to="/account" className="nav-link px-2 link-dark">{username}</Link></li>
+                    <li><Link to="/profile" className="nav-link px-2 link-dark">{username}</Link></li>
                     <li><Link to="/logout" className="nav-link px-2 link-dark">Выйти</Link></li>
                 </ul>
                 
