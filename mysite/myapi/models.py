@@ -2,15 +2,14 @@ from django.db import models
 from django.contrib.auth.models import User
 # Create your models here.
 
-class UploadedFile(models.Model):
+class UploadedPhoto(models.Model):
     file = models.FileField(upload_to='uploads/')
-    uploaded_at = models.DateTimeField(auto_now_add=True)
     
 class SegmentedPhoto(models.Model):
     photo = models.ImageField(upload_to='segmented/')
 
 class UserPhoto(models.Model):
-    uploaded_photo = models.OneToOneField(UploadedFile, on_delete=models.CASCADE)
+    uploaded_photo = models.OneToOneField(UploadedPhoto, on_delete=models.CASCADE)
     segmented_photo = models.OneToOneField(SegmentedPhoto, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     is_visible_to_team = models.BooleanField(default=False)

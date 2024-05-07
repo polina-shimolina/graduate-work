@@ -1,6 +1,6 @@
 from rest_framework import viewsets, permissions, generics
-from .serializers import UploadedFileSerializer, UserSerializer, UserProfileSerializer, TeamSerializer, SegmentedPhotoSerializer, UserPhotoSerializer
-from .models import UploadedFile, Team, UserProfile
+from .serializers import UploadedPhotoSerializer, UserSerializer, UserProfileSerializer, TeamSerializer, SegmentedPhotoSerializer, UserPhotoSerializer
+from .models import UploadedPhoto, Team, UserProfile
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -33,7 +33,7 @@ class UploadPhotoView(APIView):
             uploaded_photo_data = {
                 'photo': request.FILES['file']
             }
-            uploaded_photo_serializer = UploadedFileSerializer(data=uploaded_photo_data)
+            uploaded_photo_serializer = UploadedPhotoSerializer(data=uploaded_photo_data)
             if uploaded_photo_serializer.is_valid():
                 uploaded_photo = uploaded_photo_serializer.save()
 

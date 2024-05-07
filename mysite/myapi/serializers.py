@@ -1,12 +1,12 @@
 from rest_framework import serializers
-from .models import Team, UserProfile, UploadedFile, SegmentedPhoto, UserPhoto
+from .models import Team, UserProfile, UploadedPhoto, SegmentedPhoto, UserPhoto
 from django.contrib.auth.models import User
 from rest_framework.serializers import Serializer, ModelSerializer, CharField
 from rest_framework.authtoken.models import Token
 
-class UploadedFileSerializer(serializers.ModelSerializer):
+class UploadedPhotoSerializer(serializers.ModelSerializer):
     class Meta:
-        model = UploadedFile
+        model = UploadedPhoto
         fields = ['id', 'file', 'uploaded_at']
 
 class SegmentedPhotoSerializer(serializers.ModelSerializer):

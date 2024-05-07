@@ -1,8 +1,8 @@
 from django.contrib import admin
 # Register your models here.
 
-from .models import UploadedFile, Team, UserProfile
+from .models import UploadedPhoto, Team, UserProfile
 
-admin.site.register(UploadedFile)
+admin.site.register(UploadedPhoto)
 admin.site.register(Team)
 admin.site.register(UserProfile)
