@@ -19,31 +19,32 @@ mysite - back на джанго
 
 1. Установите Python, если он не установлен.
 2. Создайте виртуальное окружение:
-   На Windows
+   
    ```
    py -3.12 -m venv venv
+   ```
+3. Активируйте виртуальное окружение
+4. На Windows
+   ```
+   venv/Scripts/activate
    ```
    На macOS и Linux:
    ```
    source venv/bin/activate
    ```
-3. Активируйте виртуальное окружение
-   ```
-   venv/Scripts/activate
-   ```
-4. Перейдите в директорию бэкенда:
+5. Перейдите в директорию бэкенда:
    ```
    cd mysite
    ```
-5. Установите зависимости из файла requirements.txt:
+6. Установите зависимости из файла requirements.txt:
    ```
    pip install -r requirements.txt
    ```
-6. Проведите миграции базы данных:
+7. Проведите миграции базы данных:
    ```
    python manage.py migrate
    ```
-7. Запустите сервер Django:
+8. Запустите сервер Django:
    ```
    python manage.py runserver
    ```
