@@ -6,24 +6,25 @@ const Photos = () => {
 
   const handleUploadFile = async () => {
     const formData = new FormData();
-    formData.append('file', selectedFile);
-  
+    formData.append('photo', selectedFile);
+
     try {
       const response = await fetch('/api/photo/upload/', {
         method: 'POST',
-        body: formData
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+      },
+        body: formData,
       });
-  
+
       if (response.ok) {
-        const data = await response.json();
-        console.log('Ответ от сервера:', data);
-        //alert('Файл успешно загружен на сервер!');
+        console.log('Файл успешно отправлен на сервер');
       } else {
-        throw new Error('Ошибка при загрузке файла');
+        console.error('Произошла ошибка при отправке файла на сервер');
       }
     } catch (error) {
-      console.error('Ошибка при загрузке файла:', error);
-      //alert('Произошла ошибка при загрузке файла.');
+      console.error('Произошла ошибка при выполнении запроса', error);
     }
   }
 

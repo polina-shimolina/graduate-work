@@ -7,7 +7,7 @@ from rest_framework.authtoken.models import Token
 class UploadedPhotoSerializer(serializers.ModelSerializer):
     class Meta:
         model = UploadedPhoto
-        fields = ['id', 'file', 'uploaded_at']
+        fields = ['id', 'file']
 
 class SegmentedPhotoSerializer(serializers.ModelSerializer):
        class Meta:

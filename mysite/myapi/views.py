@@ -14,7 +14,6 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.contrib.auth import authenticate, login, logout
 from rest_framework.views import APIView, View
 from rest_framework.response import Response
-from rest_framework.status import HTTP_201_CREATED
 from rest_framework.generics import RetrieveUpdateAPIView
 import json
 
