@@ -225,13 +225,14 @@ class TeamView(APIView):
     
 
 def update_team_photo(request, photo_id, team_id, checked):
-    team_photo = get_object_or_404(TeamPhoto, segmented_photo_id=photo_id, team_id=team_id)
-    
+    try:
+        team_photo = TeamPhoto.objects.get(segmented_photo_id=photo_id, team_id=team_id)
+    except TeamPhoto.DoesNotExist:
+        return JsonResponse({'error': 'Team photo not found'}, status=404)
+
     if checked:
-        # Добавить фото в таблицу TeamPhoto
         TeamPhoto.objects.create(segmented_photo=team_photo.segmented_photo, team=team_photo.team)
     else:
-        # Удалить фото из таблицы TeamPhoto
         team_photo.delete()
 
     return JsonResponse({'message': 'Team photo updated successfully'})
