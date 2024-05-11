@@ -10,6 +10,7 @@ import Logout from './components/Logout';
 import Account from './components/Account';
 import Register from './components/RegistrationForm'
 import Team from './components/Team'
+import './App.css';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -43,22 +44,25 @@ function App() {
     window.location.href = '/login';
     };
 
-  return (
+    return (
       <BrowserRouter basename="/">
-        <Header />
-        <Routes>
-          <Route path="/" element={<><h1>Сегментируйте свои изображения с удовольствием</h1><h3>1000000 пользователей уже воспользовались и оценили наш сервис</h3><Main /></>}/>
-          <Route path="/about" element={<><About /></>}/>
-          <Route path="/photos" element={<><Photos /></>}/>
-          <Route path="/login" element={<Login onLogin={handleLogin} />} />
-          <Route path="/register" element={<Register onRegister={handleRegister}/>} />
-          <Route path="/logout" element={<Logout onLogout={handleLogout} />} />
-          <Route path="/profile" element={<Account isAuthenticated={isAuthenticated} />} />
-          <Route path="/team" element={<Team isAuthenticated={isAuthenticated}/>} />
-        </Routes>
-        <Footer/>
+        <div id="root">
+          <Header />
+          <Routes style={{ flex: 1 }}>
+            <Route path="/" element={<><h1>Сегментируйте свои изображения с удовольствием</h1><h3>1000000 пользователей уже воспользовались и оценили наш сервис</h3><Main /></>}/>
+            <Route path="/about" element={<><About /></>}/>
+            <Route path="/photos" element={<><Photos /></>}/>
+            <Route path="/login" element={<Login onLogin={handleLogin} />} />
+            <Route path="/register" element={<Register onRegister={handleRegister}/>} />
+            <Route path="/logout" element={<Logout onLogout={handleLogout} />} />
+            <Route path="/profile" element={<Account isAuthenticated={isAuthenticated} />} />
+            <Route path="/team" element={<Team isAuthenticated={isAuthenticated}/>} />
+          </Routes>
+          <Footer className="footer" />
+        </div>
       </BrowserRouter>
-  );
+    );
+    
 }
 
 export default App;

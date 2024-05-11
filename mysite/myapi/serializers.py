@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Team, UserProfile, UploadedPhoto, SegmentedPhoto, UserPhoto
+from .models import Team, UserProfile, UploadedPhoto, SegmentedPhoto, UserPhoto, TeamPhoto
 from django.contrib.auth.models import User
 from rest_framework.serializers import Serializer, ModelSerializer, CharField
 from rest_framework.authtoken.models import Token
@@ -17,6 +17,11 @@ class SegmentedPhotoSerializer(serializers.ModelSerializer):
 class UserPhotoSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserPhoto
+        fields = '__all__'
+
+class TeamPhotoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TeamPhoto
         fields = '__all__'
 
 class LoginRequestSerializer(Serializer):

@@ -7,13 +7,58 @@ const Photos = () => {
   const [uploadedPhotos, setUploadedPhotos] = useState([]);
   const userId = localStorage.getItem('id')
   const [selectedPhotos, setSelectedPhotos] = useState([]);
+  const [teamId, setTeamId] = useState();
 
-  const handleCheckboxChange = (photo) => {
-    if (selectedPhotos.includes(photo)) {
-        setSelectedPhotos(selectedPhotos.filter(item => item !== photo));
-    } else {
-        setSelectedPhotos([...selectedPhotos, photo]);
+
+  const getTeamId = async (userId) => {
+    try {
+        const response = await fetch(`/api/user/${userId}/team/`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch team data');
+        }
+        const data = await response.json();
+        return data.team_id;
+    } catch (error) {
+        console.error('Error fetching teamId:', error);
+        return null;
     }
+};
+
+const handleCheckboxChange = async (photo) => {
+  try {
+      const teamId = await getTeamId(userId); // Получаем teamId асинхронно
+      if (!teamId) {
+          console.error('Team ID not found');
+          return;
+      }
+
+      if (selectedPhotos.includes(photo)) {
+          setSelectedPhotos(selectedPhotos.filter(item => item !== photo));
+      } else {
+          setSelectedPhotos([...selectedPhotos, photo]);
+      }
+
+      // Вызываем функцию updateTeamPhoto с передачей photo.id, teamId и selectedPhotos.includes(photo)
+      await updateTeamPhoto(photo.id, teamId, selectedPhotos.includes(photo));
+  } catch (error) {
+      console.error('Error handling checkbox change:', error);
+  }
+};
+
+const updateTeamPhoto = (photoId, teamId, checked) => {
+    fetch(`/api/photo/${photoId}/${teamId}/${checked}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
 };
 
   const handleUploadFile = async () => {
@@ -60,7 +105,12 @@ const Photos = () => {
             if (response.ok) {
                 console.log("Фотографии пользователя получены");
                 const data = await response.json();
-                const segmentedPhotos = data.map(item => item.segmented_photo); // Получаем массив сегментированных фотографий
+                const segmentedPhotos = data.map((item, index) => {
+                  return {
+                      id: item.id, // Идентификатор элемента
+                      segmented_photo: item.segmented_photo // Сегментированная фотография
+                  };
+              }); // Получаем массив сегментированных фотографий
                 setUploadedPhotos(segmentedPhotos);
                 console.log(segmentedPhotos.length);
                 console.log(segmentedPhotos);
@@ -111,7 +161,7 @@ const Photos = () => {
               {uploadedPhotos.map((photo, index) => (
                 <div key={index} className="col-md-4 mb-3">
                   <Card style={{ width: '18rem' }}>
-                            <Card.Img variant="top" src={photo} style={{ width: '100%', height: '200px', objectFit: 'cover' }}/>
+                            <Card.Img variant="top" src={photo.segmented_photo} style={{ width: '100%', height: '200px', objectFit: 'cover' }}/>
                             <Card.Body>
                                 <Form.Check
                                     type="checkbox"

@@ -1,6 +1,6 @@
 from rest_framework import viewsets, permissions, generics
 from .serializers import UploadedPhotoSerializer, UserSerializer, UserProfileSerializer, TeamSerializer, SegmentedPhotoSerializer, UserPhotoSerializer
-from .models import UploadedPhoto, Team, UserProfile, UserPhoto
+from .models import UploadedPhoto, Team, UserProfile, UserPhoto, TeamPhoto
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -17,6 +17,7 @@ from rest_framework.response import Response
 from rest_framework.generics import RetrieveUpdateAPIView
 import json
 import logging
+from django.shortcuts import get_object_or_404
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -60,6 +61,7 @@ class UserPhotoView(APIView):
         serialized_data = []
         for user_photo in user_photos:
             serialized_data.append({
+                'id': user_photo.id,
                 'segmented_photo': user_photo.segmented_photo.photo.url,  # Получаем URL изображения
             })
         return Response(serialized_data)
@@ -118,9 +120,6 @@ def get_team(request):
 class UserDetail(RetrieveUpdateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-
-
-        
 
 
 class UserProfileView(View):
@@ -225,3 +224,14 @@ class TeamView(APIView):
         return Response(serializer.data)
     
 
+def update_team_photo(request, photo_id, team_id, checked):
+    team_photo = get_object_or_404(TeamPhoto, segmented_photo_id=photo_id, team_id=team_id)
+    
+    if checked:
+        # Добавить фото в таблицу TeamPhoto
+        TeamPhoto.objects.create(segmented_photo=team_photo.segmented_photo, team=team_photo.team)
+    else:
+        # Удалить фото из таблицы TeamPhoto
+        team_photo.delete()
+
+    return JsonResponse({'message': 'Team photo updated successfully'})
