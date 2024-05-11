@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from "react-router-dom";
 
 const About = () => {
+    const token = localStorage.getItem('accessToken');
     return (
         <div>
             <div>
@@ -11,8 +12,11 @@ const About = () => {
                     <p>Этот инновационный инструмент поможет вам выделить объекты на фотографиях и улучшить процесс анализа изображений.</p>
                     <p>Присоединяйтесь к нам и узнайте больше о возможностях нашего сервиса!</p>
                 </div>
-                <Link to="/photos">Испытать сервис</Link>
-            </div>
+                {token ? (
+                    <Link to="/photos">Испытать сервис</Link>
+                ) : (
+                    <Link to="/login">Испытать сервис</Link>
+                )}            </div>
 
         </div>
     );

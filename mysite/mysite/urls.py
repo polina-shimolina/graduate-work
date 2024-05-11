@@ -51,6 +51,7 @@ urlpatterns = [
     path('api/token/obtain', TokenObtainPairView.as_view(), name='token_obtain'),
     path('api/token/refresh', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/photo/upload/', views.UploadPhotoView.as_view(), name='file-upload'),
+    path('api/photo/user/<int:user_id>/', views.UserPhotoView.as_view(), name='user_photos'),
     path('api/team/', views.TeamView.as_view(), name='team-create'),
     path('api/team/<int:team_id>/users/', views.TeamUsersView.as_view(), name='team_users'),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),

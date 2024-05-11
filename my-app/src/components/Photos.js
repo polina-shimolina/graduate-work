@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Photos = () => {
   const [selectedFile, setSelectedFile] = useState();
+  const [uploadedPhotos, setUploadedPhotos] = useState([]);
+  const userId = localStorage.getItem('id')
 
   const handleUploadFile = async () => {
     if (!selectedFile) {
@@ -41,11 +43,29 @@ const Photos = () => {
     setSelectedFile(file);
   }
 
+  useEffect(() => {
+    const fetchUserPhotos = async () => {
+      try {
+        const response = await fetch(`/api/photo/user/${userId}`);
+        if (response.ok) {
+          const data = await response.json();
+          setUploadedPhotos(data.photos);
+        } else {
+          console.error('Ошибка при получении фотографий пользователя');
+        }
+      } catch (error) {
+        console.error('Произошла ошибка при загрузке фотографий', error);
+      }
+    };
+
+    fetchUserPhotos();
+  }, [userId]);
+
   return (
     <div className="container">
       <h1 style={{ textAlign: 'center' }}>Загрузка файла</h1>
 
-      <form onSubmit={(e) => e.preventDefault()} style={{ textAlign: 'center' }}>
+      <form onSubmit={(e) => e.preventDefault()} style={{ textAlign: 'center', marginBottom: '50px' }}>
         <div className="form-group">
           <label htmlFor="fileInput" className="form-label">Выберите файл:</label>
           <input 
@@ -68,6 +88,29 @@ const Photos = () => {
           </div>
         )}
       </form>
+      <div>
+      <h1 style={{ textAlign: 'center' }}>Моя галерея</h1>
+
+      {uploadedPhotos && uploadedPhotos.length > 0 ? (
+          <div>
+            <h1 style={{ textAlign: 'center' }}>Ваши изображения:</h1>
+            <div className="row">
+              {uploadedPhotos.map((photo, index) => (
+                <div key={index} className="col-md-4 mb-3">
+                  <div className="card">
+                    <img src={URL.createObjectURL(photo)} className="card-img-top" alt={`Photo ${index}`} />
+                    <div className="card-body">
+                      <p className="card-text">Изображение {index + 1}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <p style={{ textAlign: 'center' }}>Вы пока не добавили ни одного изображения, поэтому в вашей галерее пусто(( Загрузите свое первое изображение.</p>
+        )}
+      </div>
     </div>
   );
 };

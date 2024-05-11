@@ -54,6 +54,13 @@ class UploadPhotoView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
+class UserPhotoView(APIView):
+    def get(self, request, user_id):
+        user_photos = UserPhoto.objects.filter(user_id=user_id)
+        serializer = UserPhotoSerializer(user_photos, many=True)
+        return Response(serializer.data)
+    
+
 @api_view(['GET', 'PUT'])
 @permission_classes([IsAuthenticated])
 @authentication_classes([JWTAuthentication])
@@ -212,3 +219,5 @@ class TeamView(APIView):
         teams = Team.objects.all()
         serializer = TeamSerializer(teams, many=True)
         return Response(serializer.data)
+    
+
