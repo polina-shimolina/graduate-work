@@ -57,8 +57,12 @@ class UploadPhotoView(APIView):
 class UserPhotoView(APIView):
     def get(self, request, user_id):
         user_photos = UserPhoto.objects.filter(user_id=user_id)
-        serializer = UserPhotoSerializer(user_photos, many=True)
-        return Response(serializer.data)
+        serialized_data = []
+        for user_photo in user_photos:
+            serialized_data.append({
+                'segmented_photo': user_photo.segmented_photo.photo.url,  # Получаем URL изображения
+            })
+        return Response(serialized_data)
     
 
 @api_view(['GET', 'PUT'])

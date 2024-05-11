@@ -1,10 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Card, Form } from 'react-bootstrap';
 
 const Photos = () => {
   const [selectedFile, setSelectedFile] = useState();
   const [uploadedPhotos, setUploadedPhotos] = useState([]);
   const userId = localStorage.getItem('id')
+  const [selectedPhotos, setSelectedPhotos] = useState([]);
+
+  const handleCheckboxChange = (photo) => {
+    if (selectedPhotos.includes(photo)) {
+        setSelectedPhotos(selectedPhotos.filter(item => item !== photo));
+    } else {
+        setSelectedPhotos([...selectedPhotos, photo]);
+    }
+};
 
   const handleUploadFile = async () => {
     if (!selectedFile) {
@@ -45,21 +55,25 @@ const Photos = () => {
 
   useEffect(() => {
     const fetchUserPhotos = async () => {
-      try {
-        const response = await fetch(`/api/photo/user/${userId}`);
-        if (response.ok) {
-          const data = await response.json();
-          setUploadedPhotos(data.photos);
-        } else {
-          console.error('Ошибка при получении фотографий пользователя');
+        try {
+            const response = await fetch(`/api/photo/user/${userId}`);
+            if (response.ok) {
+                console.log("Фотографии пользователя получены");
+                const data = await response.json();
+                const segmentedPhotos = data.map(item => item.segmented_photo); // Получаем массив сегментированных фотографий
+                setUploadedPhotos(segmentedPhotos);
+                console.log(segmentedPhotos.length);
+                console.log(segmentedPhotos);
+            } else {
+                console.error('Ошибка при получении фотографий пользователя');
+            }
+        } catch (error) {
+            console.error('Произошла ошибка при загрузке фотографий', error);
         }
-      } catch (error) {
-        console.error('Произошла ошибка при загрузке фотографий', error);
-      }
     };
 
     fetchUserPhotos();
-  }, [userId]);
+}, [userId]);
 
   return (
     <div className="container">
@@ -93,16 +107,20 @@ const Photos = () => {
 
       {uploadedPhotos && uploadedPhotos.length > 0 ? (
           <div>
-            <h1 style={{ textAlign: 'center' }}>Ваши изображения:</h1>
             <div className="row">
               {uploadedPhotos.map((photo, index) => (
                 <div key={index} className="col-md-4 mb-3">
-                  <div className="card">
-                    <img src={URL.createObjectURL(photo)} className="card-img-top" alt={`Photo ${index}`} />
-                    <div className="card-body">
-                      <p className="card-text">Изображение {index + 1}</p>
-                    </div>
-                  </div>
+                  <Card style={{ width: '18rem' }}>
+                            <Card.Img variant="top" src={photo} />
+                            <Card.Body>
+                                <Form.Check
+                                    type="checkbox"
+                                    checked={selectedPhotos.includes(photo)}
+                                    onChange={() => handleCheckboxChange(photo)}
+                                    label="Добавить на страницу команды"
+                                />
+                            </Card.Body>
+                        </Card>
                 </div>
               ))}
             </div>
