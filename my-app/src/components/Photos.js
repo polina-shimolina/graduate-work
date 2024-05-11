@@ -111,7 +111,7 @@ const Photos = () => {
               {uploadedPhotos.map((photo, index) => (
                 <div key={index} className="col-md-4 mb-3">
                   <Card style={{ width: '18rem' }}>
-                            <Card.Img variant="top" src={photo} />
+                            <Card.Img variant="top" src={photo} style={{ width: '100%', height: '200px', objectFit: 'cover' }}/>
                             <Card.Body>
                                 <Form.Check
                                     type="checkbox"
