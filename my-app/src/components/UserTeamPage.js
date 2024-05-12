@@ -219,8 +219,11 @@ const UserTeamPage = () => {
                                 Uploaded by: {photo.owner.username}
                             </Card.Text>
                             {comments[photo.id] && comments[photo.id].map(comment => (
-                                <div key={comment.id}>
-                                    {comment.text} - {comment.author.username}
+                                <div key={comment.id} style={{ marginBottom: '10px', padding: '5px', border: '1px solid #ccc' }}>
+                                    <div>{comment.text}</div>
+                                    <div style={{ fontSize: '12px', color: 'gray' }}>
+                                        Оставлено {new Date(comment.publication_datetime).toLocaleString()} пользователем {comment.author.username}
+                                    </div>
                                 </div>
                             ))}
                             <Form.Group style={{ display: 'flex', alignItems: 'center' }}>
