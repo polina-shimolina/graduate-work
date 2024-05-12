@@ -10,6 +10,7 @@ const UserTeamPage = () => {
     const [teamUsers, setTeamUsers] = useState([]);
     const [teamPhotos, setTeamPhotos] = useState([]);
     const [comments, setComments] = useState([]);
+    const [commentText, setCommentText] = useState('');
 
     const fetchTeamPhotos = async () => {
         try {
@@ -122,9 +123,6 @@ const UserTeamPage = () => {
         }
 
         try {
-
-            
-
             const response = await fetch(`/api/user/${username}`);
             if (response.ok) {
                 const userData = await response.json();
@@ -157,7 +155,6 @@ const UserTeamPage = () => {
                 if (assignTeamResponse.ok) {
                     console.log(`Пользователь ${username} добавлен в команду`);
                     window.location.reload();
-                    // Обновить состояние или показать уведомление об успешном приглашении
                 } else {
                     console.error('Ошибка при назначении команды пользователю');
                 }
@@ -179,8 +176,37 @@ const UserTeamPage = () => {
         setUsername(event.target.value);
     };
 
-    const handleCommentSubmit = () => {
-        // Логика обработки отправки комментария
+    const handleCommentSubmit = async (teamphotoId) => {
+        const authorId = parseInt(localStorage.getItem('id'))
+        const userResponse = await fetch(`/api/user/${authorId}/`);
+        const userData = await userResponse.json();
+        console.log(userData)
+        const commentData = {
+            text: commentText,
+            team_photo: teamphotoId,
+            author: authorId
+        };
+
+        console.log(commentData)
+        try {
+            
+            const response = await fetch(`/api/userphoto/${teamphotoId}/comments/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(commentData),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to submit comment');
+            }
+    
+            console.log('Комментарий успешно отправлен');
+    
+        } catch (error) {
+            console.error('Error submitting comment:', error);
+        }
     };
 
     return (
@@ -227,8 +253,14 @@ const UserTeamPage = () => {
                                 </div>
                             ))}
                             <Form.Group style={{ display: 'flex', alignItems: 'center' }}>
-                                <Form.Control type="text" placeholder="Add a comment" style={{ marginRight: '10px' }} />
-                                <Button variant="primary" onClick={handleCommentSubmit}>
+                            <Form.Control 
+                                type="text" 
+                                placeholder="Add a comment" 
+                                style={{ marginRight: '10px' }} 
+                                value={commentText} 
+                                onChange={(e) => setCommentText(e.target.value)} 
+                            />
+                                <Button variant="primary" onClick={() => handleCommentSubmit(photo.id)}>
                                     <FontAwesomeIcon icon={faPaperPlane} />
                                 </Button>
                             </Form.Group>

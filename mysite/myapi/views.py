@@ -250,3 +250,12 @@ class CommentViewSet(viewsets.ModelViewSet):
         comments = Comment.objects.filter(team_photo=teamphoto_id)
         serializer = CommentSerializer(comments, many=True)
         return Response(serializer.data)
+
+    def create(self, request, teamphoto_id=None):
+        team_photo = TeamPhoto.objects.get(pk=teamphoto_id)
+        request.data['team_photo'] = team_photo.id  # Заменяем ID на объект TeamPhoto
+        serializer = CommentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
