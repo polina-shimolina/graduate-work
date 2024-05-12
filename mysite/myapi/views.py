@@ -1,6 +1,6 @@
 from rest_framework import viewsets, permissions, generics
 from .serializers import UploadedPhotoSerializer, UserSerializer, UserProfileSerializer, TeamSerializer, SegmentedPhotoSerializer, UserPhotoSerializer, TeamPhotoSerializer, CommentSerializer
-from .models import UploadedPhoto, Team, UserProfile, UserPhoto, TeamPhoto, Comment
+from .models import UploadedPhoto, Team, UserProfile, UserPhoto, TeamPhoto, Comment, SegmentedPhoto
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -18,6 +18,11 @@ from rest_framework.generics import RetrieveUpdateAPIView
 import json
 import logging
 from django.shortcuts import get_object_or_404
+from django.core.files.base import ContentFile
+
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
+from rest_framework.parsers import MultiPartParser, FormParser
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -25,35 +30,49 @@ class UserViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]  # Разрешите доступ всем
     
 
+@permission_classes([IsAuthenticated])
+@authentication_classes([JWTAuthentication])
 class UploadPhotoView(APIView):
-    def post(self, request):
+    parser_classes = [MultiPartParser, FormParser]
+
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter(
+                name='photo',
+                in_=openapi.IN_FORM,
+                description='Upload a photo',
+                type=openapi.TYPE_FILE,
+                required=True,
+            )
+        ],
+        responses={200: UploadedPhotoSerializer(many=False)}
+    )
+    def post(self, request, *args, **kwargs):
         logger = logging.getLogger(__name__)
         logger.info("Starting post method")
         serializer = UploadedPhotoSerializer(data=request.data)
-        logger.info("Checking if serializer is valid")
-        if not serializer.is_valid():
-            errors = serializer.errors
-            logger.info("Errors: %s", errors) 
         if serializer.is_valid():
             logger.info("Serializer is valid")
             uploaded_photo = serializer.save()
             logger.info("Uploaded photo saved")
             user = request.user
             logger.info("User retrieved")
-            user_photo = UserPhoto.objects.create(uploaded_photo=uploaded_photo, user=user)
-            logger.info("User photo created")
-            # Временно присваиваем segmented_photo ссылку на uploaded_photo
-            user_photo.segmented_photo = uploaded_photo
-            user_photo.save()
-            logger.info("User photo saved")
-            logger.info("Returning response with status 201 Created")
+
+            # Создаем объект SegmentedPhoto
+            segmented_photo = SegmentedPhoto()
+            # Копируем загруженное изображение в объект SegmentedPhoto
+            segmented_photo.photo.save(uploaded_photo.photo.name, ContentFile(uploaded_photo.photo.read()))
+            segmented_photo.save()
+            logger.info("Segmented photo created and saved")
+
+            user_photo = UserPhoto.objects.create(uploaded_photo=uploaded_photo, segmented_photo=segmented_photo, user=user)
+            logger.info("User photo created and saved")
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             logger.error("Serializer is not valid")
             logger.error(serializer.errors)
             logger.error("Returning response with status 400 Bad Request")
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
 
 class UserPhotoView(APIView):
     def get(self, request, user_id):

@@ -64,32 +64,32 @@ const updateTeamPhoto = (photoId, teamId, checked) => {
   const handleUploadFile = async () => {
     if (!selectedFile) {
       console.error('Файл не был выбран');
+      alert('Выберите файл перед отправкой.');
       return;
     }
     const formData = new FormData();
     formData.append('photo', selectedFile);
-    if (formData.has('photo')) {
-      console.log('В объекте formData есть данные по ключу "photo"');
-    } else {
-      console.log('В объекте formData нет данных по ключу "photo"');
-    }
+
     try {
       const response = await fetch('/api/photo/upload/', {
         method: 'POST',
         headers: {
-          'Content-Type': `multipart/form-data; boundary= ${formData.boundary}`,
           'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-      },
+        },
         body: formData,
       });
 
       if (response.ok) {
-        console.log('Файл успешно отправлен на сервер');
+        const result = await response.json();
+        console.log('Файл успешно отправлен на сервер', result);
+        alert('Файл успешно загружен.');
       } else {
-        console.error('Произошла ошибка при отправке файла на сервер');
+        console.error('Произошла ошибка при отправке файла на сервер:', response.status);
+        alert('Ошибка при отправке файла.');
       }
     } catch (error) {
       console.error('Произошла ошибка при выполнении запроса', error);
+      alert('Ошибка сети или сервера.');
     }
   }
 
