@@ -142,14 +142,24 @@ class UserTeamView(View):
     def get(self, request, user_id):
         try:
             user_profile = UserProfile.objects.select_related('team').get(user_id=user_id)
-            team_data = {
-                'user_id': user_id,
-                'team_id': user_profile.team.id,
-                'team_name': user_profile.team.teamname,
-                'team_description': user_profile.team.description,
-                'team_created_at': user_profile.team.created_at,
-                'team_creator': user_profile.team.creator.username,
-            }
+            if user_profile.team is not None:
+                team_data = {
+                    'user_id': user_id,
+                    'team_id': user_profile.team.id,
+                    'team_name': user_profile.team.teamname,
+                    'team_description': user_profile.team.description,
+                    'team_created_at': user_profile.team.created_at,
+                    'team_creator': user_profile.team.creator.username,
+                }
+            else:
+                team_data = {
+                    'user_id': user_id,
+                    'team_id': None,
+                    'team_name': None,
+                    'team_description': None,
+                    'team_created_at': None,
+                    'team_creator': None,
+                }
             return JsonResponse(team_data)
         except UserProfile.DoesNotExist:
             return JsonResponse({'error': 'User profile not found'}, status=404)

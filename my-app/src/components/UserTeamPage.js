@@ -95,7 +95,7 @@ const UserTeamPage = () => {
     
     const handleLeaveTeamClick = async () => {
         try {
-            const response = await fetch(`/api/user/${localStorage.getItem('id')}/assign-team`, {
+            const response = await fetch(`/api/user/${localStorage.getItem('id')}/team`, {
                 method: 'DELETE',
                 body: JSON.stringify({ team_id: null }),
                 headers: {
