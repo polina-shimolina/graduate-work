@@ -24,13 +24,13 @@ class TeamPhoto(models.Model):
 
 
 class Comment(models.Model):
-    user_photo = models.ForeignKey('UserPhoto', on_delete=models.CASCADE)
+    team_photo = models.ForeignKey(TeamPhoto, on_delete=models.CASCADE, default=1)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     publication_datetime = models.DateTimeField(auto_now_add=True)
     text = models.TextField()
 
     def __str__(self):
-        return f'Comment by {self.author.username} on {self.user_photo}'
+        return f'Comment by {self.author.username} on {self.team_photo}'
     
 
 class Team(models.Model):

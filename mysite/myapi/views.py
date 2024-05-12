@@ -1,6 +1,6 @@
 from rest_framework import viewsets, permissions, generics
-from .serializers import UploadedPhotoSerializer, UserSerializer, UserProfileSerializer, TeamSerializer, SegmentedPhotoSerializer, UserPhotoSerializer, TeamPhotoSerializer
-from .models import UploadedPhoto, Team, UserProfile, UserPhoto, TeamPhoto
+from .serializers import UploadedPhotoSerializer, UserSerializer, UserProfileSerializer, TeamSerializer, SegmentedPhotoSerializer, UserPhotoSerializer, TeamPhotoSerializer, CommentSerializer
+from .models import UploadedPhoto, Team, UserProfile, UserPhoto, TeamPhoto, Comment
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -241,4 +241,12 @@ class TeamPhotosAPIView(APIView):
     def get(self, request, team_id):
         team_photos = TeamPhoto.objects.filter(team_id=team_id)
         serializer = TeamPhotoSerializer(team_photos, many=True)
+        return Response(serializer.data)
+    
+class CommentViewSet(viewsets.ModelViewSet):
+    serializer_class = CommentSerializer
+
+    def list(self, request, teamphoto_id=None):
+        comments = Comment.objects.filter(team_photo=teamphoto_id)
+        serializer = CommentSerializer(comments, many=True)
         return Response(serializer.data)

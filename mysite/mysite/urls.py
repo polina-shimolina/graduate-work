@@ -57,7 +57,7 @@ urlpatterns = [
     path('api/photo/upload/', views.UploadPhotoView.as_view(), name='file-upload'),
     path('api/photo/user/<int:user_id>/', views.UserPhotoView.as_view(), name='user_photos'),
     path('api/photo/<int:photo_id>/<int:team_id>/<int:checked>/', views.update_team_photo, name='update_team_photo'),
-    path('api/team/', views.TeamView.as_view(), name='team-create'),
+    path('api/userphoto/<int:teamphoto_id>/comments/', views.CommentViewSet.as_view({'get': 'list'}), name='userphoto-comments'),    path('api/team/', views.TeamView.as_view(), name='team-create'),
     path('api/team/<int:team_id>/users/', views.TeamUsersView.as_view(), name='team_users'),
     path('api/team/<int:team_id>/photos/', views.TeamPhotosAPIView.as_view(), name='team-photos'),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),

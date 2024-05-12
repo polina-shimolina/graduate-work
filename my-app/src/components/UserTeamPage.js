@@ -9,21 +9,47 @@ const UserTeamPage = () => {
     const [username, setUsername] = useState('');
     const [teamUsers, setTeamUsers] = useState([]);
     const [teamPhotos, setTeamPhotos] = useState([]);
+    const [comments, setComments] = useState([]);
 
-        const fetchTeamPhotos = async (teamId) => {
-            try {
-                const response = await fetch(`/api/team/${teamId}/photos`);
-                if (!response.ok) {
-                    throw new Error('Failed to fetch team photos');
-                }
-                const data = await response.json();
-                console.log(data);
-                setTeamPhotos(data); 
-            } catch (error) {
-                console.error('Error fetching team photos:', error);
+    const fetchTeamPhotos = async () => {
+        try {
+            const response = await fetch(`/api/team/${team.team_id}/photos`);
+            if (!response.ok) {
+                throw new Error('Failed to fetch team photos');
             }
-        };
+            const data = await response.json();
+            console.log(data);
+            setTeamPhotos(data); 
+            data.forEach(photo => {
+                fetchPhotoComments(photo.id);
+            });
+        } catch (error) {
+            console.error('Error fetching team photos:', error);
+        }
+    };
 
+    const fetchPhotoComments = async (teamphotosId) => {
+        try {
+            const response = await fetch(`/api/userphoto/${teamphotosId}/comments/`);
+            if (!response.ok) {
+                throw new Error('Failed to fetch comments');
+            }
+            const commentsData = await response.json();
+            console.log(commentsData);
+        
+            const updatedComments = {};
+            commentsData.forEach(comment => {
+                if (!updatedComments[comment.team_photo]) {
+                    updatedComments[comment.team_photo] = [];
+                }
+                updatedComments[comment.team_photo].push(comment);
+            });
+        
+            setComments(updatedComments);
+        } catch (error) {
+            console.error('Error fetching comments:', error);
+        }
+    };
 
     const fetchTeamUsers = async () => {
         try {
@@ -41,9 +67,10 @@ const UserTeamPage = () => {
     useEffect(() => {
         if (team) {
             fetchTeamUsers();
-            fetchTeamPhotos(team.team_id);
+            fetchTeamPhotos();
         }
     }, [team]);
+
 
     const fetchTeamData = async () => {
         try {
@@ -185,21 +212,24 @@ const UserTeamPage = () => {
         <div className="row">
             {teamPhotos.map(photo => (
                 <div key={photo.id} className="col-md-4 mb-3">
-                    <Card style={{ width: '18rem' }}>
-                        <Card.Img variant="top" src={photo.segmented_photo.photo} style={{ width: '100%', height: '200px', objectFit: 'cover' }}/>
+                    <Card style={{ width: '24rem' }}>
+                        <Card.Img variant="top" src={photo.segmented_photo.photo} style={{ width: '100%', height: 'auto', aspectRatio: '16/9' }} />
                         <Card.Body>
                             <Card.Text>
-                                {/* Информация о загрузившем пользователе */}
                                 Uploaded by: {photo.owner.username}
                             </Card.Text>
+                            {comments[photo.id] && comments[photo.id].map(comment => (
+                                <div key={comment.id}>
+                                    {comment.text} - {comment.author.username}
+                                </div>
+                            ))}
                             <Form.Group style={{ display: 'flex', alignItems: 'center' }}>
-            <Form.Control type="text" placeholder="Add a comment" style={{ marginRight: '10px' }} />
-            <Button variant="primary" onClick={handleCommentSubmit}>
-                <FontAwesomeIcon icon={faPaperPlane} /> {/* Иконка "отправить" */}
-            </Button>
-        </Form.Group>
-
-                            {/* Отображение комментария (значение из state или props) */}
+                                <Form.Control type="text" placeholder="Add a comment" style={{ marginRight: '10px' }} />
+                                <Button variant="primary" onClick={handleCommentSubmit}>
+                                    <FontAwesomeIcon icon={faPaperPlane} />
+                                </Button>
+                            </Form.Group>
+                            
                             
                         </Card.Body>
                     </Card>
