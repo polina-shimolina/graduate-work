@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './style/UserTeamPage.css'; // Импорт стилей для карточки
-import { Card, Form } from 'react-bootstrap';
+import { Card, Form, Button } from 'react-bootstrap'; // Импортируем компоненты Card, Form и Button из react-bootstrap
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; // Импортируем компонент FontAwesomeIcon из Font Awesome
+import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'; // Импортируем иконку для кнопки отправки
 
 const UserTeamPage = () => {
     const [team, setTeam] = useState();
@@ -150,6 +152,10 @@ const UserTeamPage = () => {
         setUsername(event.target.value);
     };
 
+    const handleCommentSubmit = () => {
+        // Логика обработки отправки комментария
+    };
+
     return (
     <div className="container mt-4">
         {team && (
@@ -180,13 +186,23 @@ const UserTeamPage = () => {
             {teamPhotos.map(photo => (
                 <div key={photo.id} className="col-md-4 mb-3">
                     <Card style={{ width: '18rem' }}>
-                            <Card.Img variant="top" src={photo.segmented_photo.photo} style={{ width: '100%', height: '200px', objectFit: 'cover' }}/>
-                            <Card.Body>
-                                <Card.Text>
-                                    Uploaded by: {photo.owner.username} {/* Отображаем имя загрузившего пользователя */}
-                                </Card.Text>
-                            </Card.Body>
-                        </Card>
+                        <Card.Img variant="top" src={photo.segmented_photo.photo} style={{ width: '100%', height: '200px', objectFit: 'cover' }}/>
+                        <Card.Body>
+                            <Card.Text>
+                                {/* Информация о загрузившем пользователе */}
+                                Uploaded by: {photo.owner.username}
+                            </Card.Text>
+                            <Form.Group style={{ display: 'flex', alignItems: 'center' }}>
+            <Form.Control type="text" placeholder="Add a comment" style={{ marginRight: '10px' }} />
+            <Button variant="primary" onClick={handleCommentSubmit}>
+                <FontAwesomeIcon icon={faPaperPlane} /> {/* Иконка "отправить" */}
+            </Button>
+        </Form.Group>
+
+                            {/* Отображение комментария (значение из state или props) */}
+                            
+                        </Card.Body>
+                    </Card>
                 </div>
             ))}
         </div>
