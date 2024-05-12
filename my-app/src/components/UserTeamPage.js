@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import './style/UserTeamPage.css'; // Импорт стилей для карточки
-
+import { Card, Form } from 'react-bootstrap';
 
 const UserTeamPage = () => {
     const [team, setTeam] = useState();
@@ -180,12 +179,14 @@ const UserTeamPage = () => {
         <div className="row">
             {teamPhotos.map(photo => (
                 <div key={photo.id} className="col-md-4 mb-3">
-                    <div className="card">
-                        <img src={photo.segmented_photo.image_url} className="card-img-top" alt="Photo" />
-                        <div className="card-body">
-                            <h5 className="card-title">Uploaded by: {photo.owner.username}</h5>
-                        </div>
-                    </div>
+                    <Card style={{ width: '18rem' }}>
+                            <Card.Img variant="top" src={photo.segmented_photo.photo} style={{ width: '100%', height: '200px', objectFit: 'cover' }}/>
+                            <Card.Body>
+                                <Card.Text>
+                                    Uploaded by: {photo.owner.username} {/* Отображаем имя загрузившего пользователя */}
+                                </Card.Text>
+                            </Card.Body>
+                        </Card>
                 </div>
             ))}
         </div>
