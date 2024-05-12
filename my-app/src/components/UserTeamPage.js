@@ -176,6 +176,11 @@ const UserTeamPage = () => {
         setUsername(event.target.value);
     };
 
+    const updateCommentsList = async () => {
+        const commentsResponse = await fetch('/api/comments/');
+        const commentsData = await commentsResponse.json();
+    };
+
     const handleCommentSubmit = async (teamphotoId) => {
         const authorId = parseInt(localStorage.getItem('id'))
         const userResponse = await fetch(`/api/user/${authorId}/`);
@@ -203,6 +208,8 @@ const UserTeamPage = () => {
             }
     
             console.log('Комментарий успешно отправлен');
+            fetchTeamPhotos();
+            setCommentText('');
     
         } catch (error) {
             console.error('Error submitting comment:', error);
@@ -264,8 +271,6 @@ const UserTeamPage = () => {
                                     <FontAwesomeIcon icon={faPaperPlane} />
                                 </Button>
                             </Form.Group>
-                            
-                            
                         </Card.Body>
                     </Card>
                 </div>
