@@ -19,8 +19,8 @@ class UserPhoto(models.Model):
 class TeamPhoto(models.Model):
     uploaded_photo = models.OneToOneField(UploadedPhoto, on_delete=models.CASCADE)
     segmented_photo = models.OneToOneField(SegmentedPhoto, on_delete=models.CASCADE)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='team_photos_owned')
-    team = models.ForeignKey(User, on_delete=models.CASCADE, related_name='team_photos')
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='team_photo_owned')
+    team = models.ForeignKey('Team', on_delete=models.CASCADE, related_name='team_photo')
 
 
 class Comment(models.Model):

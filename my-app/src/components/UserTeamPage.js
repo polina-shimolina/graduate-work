@@ -4,10 +4,24 @@ import './style/UserTeamPage.css'; // Импорт стилей для карт�
 
 
 const UserTeamPage = () => {
-    const [team, setTeam] = useState(null);
+    const [team, setTeam] = useState();
     const [username, setUsername] = useState('');
     const [teamUsers, setTeamUsers] = useState([]);
-    const navigate = useNavigate();
+    const [teamPhotos, setTeamPhotos] = useState([]);
+
+        const fetchTeamPhotos = async (teamId) => {
+            try {
+                const response = await fetch(`/api/team/${teamId}/photos`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch team photos');
+                }
+                const data = await response.json();
+                console.log(data);
+                setTeamPhotos(data); 
+            } catch (error) {
+                console.error('Error fetching team photos:', error);
+            }
+        };
 
 
     const fetchTeamUsers = async () => {
@@ -26,6 +40,7 @@ const UserTeamPage = () => {
     useEffect(() => {
         if (team) {
             fetchTeamUsers();
+            fetchTeamPhotos(team.team_id);
         }
     }, [team]);
 
@@ -48,10 +63,6 @@ const UserTeamPage = () => {
         fetchTeamData();
     }, []);
 
-    const handleCardClick = () => {
-        console.log('Переход на другую страницу');
-        navigate('/photos');
-    };
     
     const handleLeaveTeamClick = async () => {
         try {
@@ -163,14 +174,27 @@ const UserTeamPage = () => {
                             <li key={user.user_id}>{user.user__username} - {user.user__email}</li>                        ))}
                     </ul>
                 </div>
+                <div>
+    <h3>Наша галерея:</h3>
+    {teamPhotos.length > 0 ? (
+        <div className="row">
+            {teamPhotos.map(photo => (
+                <div key={photo.id} className="col-md-4 mb-3">
+                    <div className="card">
+                        <img src={photo.segmented_photo.image_url} className="card-img-top" alt="Photo" />
+                        <div className="card-body">
+                            <h5 className="card-title">Uploaded by: {photo.owner.username}</h5>
+                        </div>
+                    </div>
+                </div>
+            ))}
+        </div>
+    ) : (
+        <p>Твоя команда пока не добавила ни одного изображения( Воспользуйся чекбоксом на странце "<a href="/photos" className="try-link">Попробовать</a>", чтобы добавить изображение на странцу команды.</p>
+    )}
+</div>
             </div>
         )}
-        <div className="card mt-3" onClick={handleCardClick}>
-            <div className="card-body card-hover" onClick={handleCardClick}>
-                <p className="card-text">Здесь будет изображение</p>
-                <p className="card-text">Автор: Автор изображения</p>
-            </div>
-        </div>
     </div>
 );
 };

@@ -1,5 +1,5 @@
 from rest_framework import viewsets, permissions, generics
-from .serializers import UploadedPhotoSerializer, UserSerializer, UserProfileSerializer, TeamSerializer, SegmentedPhotoSerializer, UserPhotoSerializer
+from .serializers import UploadedPhotoSerializer, UserSerializer, UserProfileSerializer, TeamSerializer, SegmentedPhotoSerializer, UserPhotoSerializer, TeamPhotoSerializer
 from .models import UploadedPhoto, Team, UserProfile, UserPhoto, TeamPhoto
 from django.contrib.auth.models import User
 from django.http import JsonResponse
@@ -236,3 +236,9 @@ def update_team_photo(request, photo_id, team_id, checked):
         team_photo.delete()
 
     return JsonResponse({'message': 'Team photo updated successfully'})
+
+class TeamPhotosAPIView(APIView):
+    def get(self, request, team_id):
+        team_photos = TeamPhoto.objects.filter(team_id=team_id)
+        serializer = TeamPhotoSerializer(team_photos, many=True)
+        return Response(serializer.data)
