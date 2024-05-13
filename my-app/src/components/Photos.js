@@ -85,6 +85,7 @@ const updateTeamPhoto = (photoId, teamId, checked) => {
         const result = await response.json();
         console.log('Файл успешно отправлен на сервер', result);
         document.getElementById('fileInput').value = '';
+        setSelectedFile(null);
         fetchUserPhotos();
         
         /*alert('Файл успешно загружен.');*/
@@ -164,7 +165,7 @@ const updateTeamPhoto = (photoId, teamId, checked) => {
             <div className="row">
               {uploadedPhotos.map((photo, index) => (
                 <div key={index} className="col-md-4 mb-3">
-                  <Link to={`/photo/${photo.id}`}>
+                  <Link to={`/photos/${photo.id}`}>
                   <Card className="card" style={{ width: '18rem' }}>
                             <Card.Img variant="top" src={photo.segmented_photo} style={{ width: '100%', height: '200px', objectFit: 'cover' }}/>
                             <Card.Body>

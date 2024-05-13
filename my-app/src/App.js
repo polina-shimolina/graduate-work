@@ -61,7 +61,7 @@ function App() {
             <Route path="/logout" element={<Logout onLogout={handleLogout} />} />
             <Route path="/profile" element={<Account isAuthenticated={isAuthenticated} />} />
             <Route path="/team" element={<Team isAuthenticated={isAuthenticated}/>} />
-            <Route path="/photo/:id" element={<PhotoDetail />} />
+            <Route path="/photos/:id" element={<PhotoDetail />} />
           </Routes>
           <Footer className="footer" />
         </div>
