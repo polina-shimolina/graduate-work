@@ -156,6 +156,12 @@ class UserProfileView(View):
         except User.DoesNotExist:
             return JsonResponse({'error': 'User not found'}, status=404)
         
+
+class UserPhotoDetail(APIView):
+    def get(self, request, photo_id):
+        userphoto = UserPhoto.objects.get(id=photo_id)
+        serializer = UserPhotoSerializer(userphoto)
+        return Response(serializer.data)
     
 class UserTeamView(View):
     def get(self, request, user_id):

@@ -10,6 +10,7 @@ import Logout from './components/Logout';
 import Account from './components/Account';
 import Register from './components/RegistrationForm'
 import Team from './components/Team'
+import PhotoDetail from './components/PhotoDetail';
 import './App.css';
 import { AuthProvider } from './components/AuthContext';
 
@@ -60,6 +61,7 @@ function App() {
             <Route path="/logout" element={<Logout onLogout={handleLogout} />} />
             <Route path="/profile" element={<Account isAuthenticated={isAuthenticated} />} />
             <Route path="/team" element={<Team isAuthenticated={isAuthenticated}/>} />
+            <Route path="/photo/:id" element={<PhotoDetail />} />
           </Routes>
           <Footer className="footer" />
         </div>

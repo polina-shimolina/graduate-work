@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Card, Form } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import './style/Photos.css'
 
 const Photos = () => {
   const [selectedFile, setSelectedFile] = useState();
@@ -162,7 +164,8 @@ const updateTeamPhoto = (photoId, teamId, checked) => {
             <div className="row">
               {uploadedPhotos.map((photo, index) => (
                 <div key={index} className="col-md-4 mb-3">
-                  <Card style={{ width: '18rem' }}>
+                  <Link to={`/photo/${photo.id}`}>
+                  <Card className="card" style={{ width: '18rem' }}>
                             <Card.Img variant="top" src={photo.segmented_photo} style={{ width: '100%', height: '200px', objectFit: 'cover' }}/>
                             <Card.Body>
                                 <Form.Check
@@ -173,6 +176,7 @@ const updateTeamPhoto = (photoId, teamId, checked) => {
                                 />
                             </Card.Body>
                         </Card>
+                        </Link>
                 </div>
               ))}
             </div>
