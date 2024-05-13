@@ -166,18 +166,20 @@ const updateTeamPhoto = (photoId, teamId, checked) => {
               {uploadedPhotos.map((photo, index) => (
                 <div key={index} className="col-md-4 mb-3">
                   <Link to={`/photos/${photo.id}`}>
-                  <Card className="card" style={{ width: '18rem' }}>
-                            <Card.Img variant="top" src={photo.segmented_photo} style={{ width: '100%', height: '200px', objectFit: 'cover' }}/>
-                            <Card.Body>
-                                <Form.Check
-                                    type="checkbox"
-                                    checked={selectedPhotos.includes(photo)}
-                                    onChange={() => handleCheckboxChange(photo)}
-                                    label="Добавить на страницу команды"
-                                />
-                            </Card.Body>
-                        </Card>
-                        </Link>
+  <Card className="card" style={{ width: '18rem' }}>
+    <Card.Img variant="top" src={photo.segmented_photo} style={{ width: '100%', height: '200px', objectFit: 'cover' }}/>
+    <Card.Body>
+      <Form.Check
+        type="checkbox"
+        checked={selectedPhotos.includes(photo)}
+        onChange={() => handleCheckboxChange(photo)}
+        label="Добавить на страницу команды"
+        onClick={(e) => e.stopPropagation()}
+      />
+    </Card.Body>
+  </Card>
+</Link>
+
                 </div>
               ))}
             </div>
