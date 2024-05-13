@@ -82,10 +82,13 @@ const updateTeamPhoto = (photoId, teamId, checked) => {
       if (response.ok) {
         const result = await response.json();
         console.log('Файл успешно отправлен на сервер', result);
-        alert('Файл успешно загружен.');
+        document.getElementById('fileInput').value = '';
+        fetchUserPhotos();
+        
+        /*alert('Файл успешно загружен.');*/
       } else {
         console.error('Произошла ошибка при отправке файла на сервер:', response.status);
-        alert('Ошибка при отправке файла.');
+        /*alert('Ошибка при отправке файла.');*/
       }
     } catch (error) {
       console.error('Произошла ошибка при выполнении запроса', error);
@@ -97,31 +100,30 @@ const updateTeamPhoto = (photoId, teamId, checked) => {
     const file = event.target.files[0];
     setSelectedFile(file);
   }
-
-  useEffect(() => {
-    const fetchUserPhotos = async () => {
-        try {
-            const response = await fetch(`/api/photo/user/${userId}`);
-            if (response.ok) {
-                console.log("Фотографии пользователя получены");
-                const data = await response.json();
-                const segmentedPhotos = data.map((item, index) => {
-                  return {
-                      id: item.id, // Идентификатор элемента
-                      segmented_photo: item.segmented_photo // Сегментированная фотография
-                  };
-              }); // Получаем массив сегментированных фотографий
-                setUploadedPhotos(segmentedPhotos);
-                console.log(segmentedPhotos.length);
-                console.log(segmentedPhotos);
-            } else {
-                console.error('Ошибка при получении фотографий пользователя');
-            }
-        } catch (error) {
-            console.error('Произошла ошибка при загрузке фотографий', error);
+  const fetchUserPhotos = async () => {
+    try {
+        const response = await fetch(`/api/photo/user/${userId}`);
+        if (response.ok) {
+            console.log("Фотографии пользователя получены");
+            const data = await response.json();
+            const segmentedPhotos = data.map((item, index) => {
+              return {
+                  id: item.id, // Идентификатор элемента
+                  segmented_photo: item.segmented_photo // Сегментированная фотография
+              };
+          }); // Получаем массив сегментированных фотографий
+            setUploadedPhotos(segmentedPhotos);
+            console.log(segmentedPhotos.length);
+            console.log(segmentedPhotos);
+        } else {
+            console.error('Ошибка при получении фотографий пользователя');
         }
-    };
-
+    } catch (error) {
+        console.error('Произошла ошибка при загрузке фотографий', error);
+    }
+};
+  useEffect(() => {
+  
     fetchUserPhotos();
 }, [userId]);
 

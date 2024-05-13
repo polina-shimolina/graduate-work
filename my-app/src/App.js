@@ -11,6 +11,7 @@ import Account from './components/Account';
 import Register from './components/RegistrationForm'
 import Team from './components/Team'
 import './App.css';
+import { AuthProvider } from './components/AuthContext';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -47,7 +48,9 @@ function App() {
     return (
       <BrowserRouter basename="/">
         <div id="root">
-          <Header />
+          <AuthProvider>
+            <Header />
+          </AuthProvider>
           <Routes style={{ flex: 1 }}>
             <Route path="/" element={<><h1>Сегментируйте свои изображения с удовольствием</h1><h3>1000000 пользователей уже воспользовались и оценили наш сервис</h3><Main /></>}/>
             <Route path="/about" element={<><About /></>}/>

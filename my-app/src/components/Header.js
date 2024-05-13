@@ -1,21 +1,10 @@
-import React, { useState, useEffect } from 'react';import { Link } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Header_Authorised from './Header_Authorised';
 import Header_UnAuthorised from './Header_UnAuthorised';
-
+import { AuthContext } from './AuthContext';
+import React, { useContext } from 'react';
 const Header = () => {
-    const [isAuthenticated, setIsAuthenticated] = useState(localStorage.getItem('accessToken') ? true : false);
-    useEffect(() => {
-        const handleStorageChange = () => {
-            setIsAuthenticated(localStorage.getItem('accessToken') ? true : false);
-        };
-
-        window.addEventListener('storage', handleStorageChange);
-
-        return () => {
-            window.removeEventListener('storage', handleStorageChange);
-        };
-    }, []);
+    const { isAuthenticated } = useContext(AuthContext);
 
     return isAuthenticated ? <Header_Authorised /> : <Header_UnAuthorised />;
 };
