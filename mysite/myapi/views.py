@@ -24,6 +24,11 @@ from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from rest_framework.parsers import MultiPartParser, FormParser
 
+from django.http import JsonResponse
+from django.views.decorators.http import require_http_methods 
+from django.views.decorators.csrf import csrf_exempt
+from django.db import IntegrityError
+
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -259,18 +264,67 @@ class TeamView(APIView):
         return Response(serializer.data)
     
 
+
+
+
+@require_http_methods(["POST"]) 
+@csrf_exempt
 def update_team_photo(request, photo_id, team_id, checked):
+    print("===============================")
+    print(f"Request Method: {request.method}")
+    print(f"Photo ID: {photo_id}")
+    print(f"Team ID: {team_id}")
+    print(f"Checked: {checked}")
+    print("===============================")
+    
+    checked = checked.lower() == 'true'
+
     try:
-        team_photo = TeamPhoto.objects.get(segmented_photo_id=photo_id, team_id=team_id)
-    except TeamPhoto.DoesNotExist:
-        return JsonResponse({'error': 'Team photo not found'}, status=404)
+        team = Team.objects.get(id=team_id)
+        segmented_photo = SegmentedPhoto.objects.get(id=photo_id)
+        
+        # Если у segmented_photo уже есть uploaded_photo, используй его
+        if hasattr(segmented_photo, 'userphoto'):
+            uploaded_photo = segmented_photo.userphoto.uploaded_photo
+        else:
+            # Или создай новое uploaded_photo, если это необходимо
+            uploaded_photo = UploadedPhoto.objects.create(photo=segmented_photo.photo)  # Пример создания нового объекта
 
-    if checked:
-        TeamPhoto.objects.create(segmented_photo=team_photo.segmented_photo, team=team_photo.team)
-    else:
-        team_photo.delete()
+        team_photo, created = TeamPhoto.objects.get_or_create(
+            segmented_photo=segmented_photo,
+            team=team,
+            defaults={
+                'owner': team.creator,
+                'uploaded_photo': uploaded_photo  # Установка uploaded_photo
+            }
+        )
+        
+        if created:
+            print("Created a new TeamPhoto")
+        else:
+            print("Found an existing TeamPhoto")
+        
+        if checked:
+            team_photo.save()
+        else:
+            team_photo.delete()
 
-    return JsonResponse({'message': 'Team photo updated successfully'})
+        return JsonResponse({'message': 'Team photo updated successfully'})
+    
+    except Team.DoesNotExist:
+        print("Team not found")
+        return JsonResponse({'error': 'Team not found'}, status=404)
+    except SegmentedPhoto.DoesNotExist:
+        print("Segmented Photo not found")
+        return JsonResponse({'error': 'Segmented Photo not found'}, status=404)
+    except IntegrityError as e:
+        print(f"Integrity error: {e}")
+        return JsonResponse({'error': 'Failed to create or update the team photo'}, status=500)
+    except Exception as e:
+        print(f"Unhandled error: {e}")
+        return JsonResponse({'error': 'An error occurred'}, status=500)
+
+
 
 class TeamPhotosAPIView(APIView):
     def get(self, request, team_id):

@@ -24,44 +24,53 @@ const Photos = () => {
         console.error('Error fetching teamId:', error);
         return null;
     }
-};
+  };
 
-const handleCheckboxChange = async (photo) => {
-  try {
-      const teamId = await getTeamId(userId); // Получаем teamId асинхронно
-      if (!teamId) {
-          console.error('Team ID not found');
-          return;
-      }
+  const handleCheckboxChange = async (photo) => {
+    try {
+        const teamId = await getTeamId(userId); // Получаем teamId асинхронно
+        if (!teamId) {
+            console.error('Team ID not found');
+            return;
+        }
 
-      if (selectedPhotos.includes(photo)) {
-          setSelectedPhotos(selectedPhotos.filter(item => item !== photo));
-      } else {
-          setSelectedPhotos([...selectedPhotos, photo]);
-      }
+        if (selectedPhotos.includes(photo)) {
+            setSelectedPhotos(selectedPhotos.filter(item => item !== photo));
+        } else {
+            setSelectedPhotos([...selectedPhotos, photo]);
+        }
 
-      // Вызываем функцию updateTeamPhoto с передачей photo.id, teamId и selectedPhotos.includes(photo)
-      await updateTeamPhoto(photo.id, teamId, selectedPhotos.includes(photo));
-  } catch (error) {
-      console.error('Error handling checkbox change:', error);
-  }
-};
+        // Вызываем функцию updateTeamPhoto с передачей photo.id, teamId и selectedPhotos.includes(photo)
+        await updateTeamPhoto(photo.id, teamId, selectedPhotos.includes(photo), userId);
+    } catch (error) {
+        console.error('Error handling checkbox change:', error);
+    }
+  };
 
-const updateTeamPhoto = (photoId, teamId, checked) => {
-    fetch(`/api/photo/${photoId}/${teamId}/${checked}/`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data);
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-};
+  const updateTeamPhoto = (photoId, teamId, checked) => {
+      fetch(`/api/photo/${photoId}/${teamId}/${checked}/`, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+      })
+      .then(response => {
+      console.log("=============")
+      console.log(response)
+      console.log("=============")
+       
+          if (!response.ok) {
+              throw new Error('Network response was not ok');
+          }
+          return response.json();
+      })
+      .then(data => {
+          console.log(data);
+      })
+      .catch(error => {
+          console.error('Error:', error);
+      });
+  };
 
   const handleUploadFile = async () => {
     if (!selectedFile) {

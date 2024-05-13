@@ -56,7 +56,7 @@ urlpatterns = [
     path('api/token/refresh', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/photo/upload/', views.UploadPhotoView.as_view(), name='file-upload'),
     path('api/photo/user/<int:user_id>/', views.UserPhotoView.as_view(), name='user_photos'),
-    path('api/photo/<int:photo_id>/<int:team_id>/<int:checked>/', views.update_team_photo, name='update_team_photo'),
+    path('api/photo/<int:photo_id>/<int:team_id>/<str:checked>/', views.update_team_photo, name='update_team_photo'),
     path('api/userphoto/<int:teamphoto_id>/comments/', views.CommentViewSet.as_view({'get': 'list', 'post': 'create'}), name='userphoto-comments'), 
     path('api/userphoto/<int:photo_id>/', views.UserPhotoDetail.as_view()),
     path('api/team/', views.TeamView.as_view(), name='team-create'),
