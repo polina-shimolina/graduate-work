@@ -40,6 +40,7 @@ class SegmentedPhotoSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class UserPhotoSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
     uploaded_photo = UploadedPhotoSerializer()
     segmented_photo = SegmentedPhotoSerializer()
     class Meta:
@@ -47,8 +48,7 @@ class UserPhotoSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class TeamPhotoSerializer(serializers.ModelSerializer):
-    owner = UserSerializer()
-    segmented_photo = SegmentedPhotoSerializer()
+    user_photo = UserPhotoSerializer()
     class Meta:
         model = TeamPhoto
         fields = '__all__'

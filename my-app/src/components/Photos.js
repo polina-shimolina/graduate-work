@@ -41,7 +41,7 @@ const Photos = () => {
         }
 
         // Вызываем функцию updateTeamPhoto с передачей photo.id, teamId и selectedPhotos.includes(photo)
-        await updateTeamPhoto(photo.id, teamId, selectedPhotos.includes(photo), userId);
+        await updateTeamPhoto(photo.id, teamId, true, userId);
     } catch (error) {
         console.error('Error handling checkbox change:', error);
     }
@@ -120,8 +120,11 @@ const Photos = () => {
             const data = await response.json();
             const segmentedPhotos = data.map((item, index) => {
               return {
-                  id: item.id, // Идентификатор элемента
-                  segmented_photo: item.segmented_photo // Сегментированная фотография
+                  id: item.id, 
+                  segmented_photo: item.segmented_photo,
+                  uploaded_photo: item.uploaded_photo,
+                  is_visible_to_team: item.is_visible_to_team
+
               };
           }); // Получаем массив сегментированных фотографий
             setUploadedPhotos(segmentedPhotos);
@@ -175,20 +178,19 @@ const Photos = () => {
               {uploadedPhotos.map((photo, index) => (
                 <div key={index} className="col-md-4 mb-3">
                   <Link to={`/photos/${photo.id}`}>
-  <Card className="card" style={{ width: '18rem' }}>
-    <Card.Img variant="top" src={photo.segmented_photo} style={{ width: '100%', height: '200px', objectFit: 'cover' }}/>
-    <Card.Body>
-      <Form.Check
-        type="checkbox"
-        checked={selectedPhotos.includes(photo)}
-        onChange={() => handleCheckboxChange(photo)}
-        label="Добавить на страницу команды"
-        onClick={(e) => e.stopPropagation()}
-      />
-    </Card.Body>
-  </Card>
-</Link>
-
+                    <Card className="card" style={{ width: '18rem' }}>
+                      <Card.Img variant="top" src={photo.segmented_photo} style={{ width: '100%', height: '200px', objectFit: 'cover' }}/>
+                      <Card.Body>
+                        <Form.Check
+                          type="checkbox"
+                          checked={photo.is_visible_to_team}
+                          onChange={() => handleCheckboxChange(photo)}
+                          label="Добавить на страницу команды"
+                          onClick={(e) => e.stopPropagation()}
+                        />
+                      </Card.Body>
+                    </Card>
+                  </Link>
                 </div>
               ))}
             </div>

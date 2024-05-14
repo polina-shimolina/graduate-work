@@ -84,9 +84,13 @@ class UserPhotoView(APIView):
         user_photos = UserPhoto.objects.filter(user_id=user_id)
         serialized_data = []
         for user_photo in user_photos:
+            user_data = UserSerializer(user_photo.user).data
             serialized_data.append({
                 'id': user_photo.id,
+                'uploaded_photo': user_photo.uploaded_photo.photo.url,
                 'segmented_photo': user_photo.segmented_photo.photo.url,  # Получаем URL изображения
+                'user': user_data,
+                'is_visible_to_team': user_photo.is_visible_to_team,
             })
         return Response(serialized_data)
     
@@ -263,10 +267,6 @@ class TeamView(APIView):
         serializer = TeamSerializer(teams, many=True)
         return Response(serializer.data)
     
-
-
-
-
 @require_http_methods(["POST"]) 
 @csrf_exempt
 def update_team_photo(request, photo_id, team_id, checked):
@@ -285,17 +285,18 @@ def update_team_photo(request, photo_id, team_id, checked):
         
         # Если у segmented_photo уже есть uploaded_photo, используй его
         if hasattr(segmented_photo, 'userphoto'):
+            user_photo = segmented_photo.userphoto
             uploaded_photo = segmented_photo.userphoto.uploaded_photo
         else:
             # Или создай новое uploaded_photo, если это необходимо
             uploaded_photo = UploadedPhoto.objects.create(photo=segmented_photo.photo)  # Пример создания нового объекта
+            user_photo = UserPhoto.objects.create(uploaded_photo=uploaded_photo, segmented_photo=segmented_photo, user=request.user)
 
         team_photo, created = TeamPhoto.objects.get_or_create(
-            segmented_photo=segmented_photo,
+            user_photo=user_photo,
             team=team,
             defaults={
                 'owner': team.creator,
-                'uploaded_photo': uploaded_photo  # Установка uploaded_photo
             }
         )
         
@@ -305,8 +306,12 @@ def update_team_photo(request, photo_id, team_id, checked):
             print("Found an existing TeamPhoto")
         
         if checked:
+            user_photo.is_visible_to_team = True
+            user_photo.save()
             team_photo.save()
         else:
+            user_photo.is_visible_to_team = False
+            user_photo.save()
             team_photo.delete()
 
         return JsonResponse({'message': 'Team photo updated successfully'})
@@ -323,7 +328,6 @@ def update_team_photo(request, photo_id, team_id, checked):
     except Exception as e:
         print(f"Unhandled error: {e}")
         return JsonResponse({'error': 'An error occurred'}, status=500)
-
 
 
 class TeamPhotosAPIView(APIView):

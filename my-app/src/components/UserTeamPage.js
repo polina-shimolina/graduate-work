@@ -246,10 +246,10 @@ const UserTeamPage = () => {
             {teamPhotos.map(photo => (
                 <div key={photo.id} className="col-md-4 mb-3">
                     <Card style={{ width: '24rem' }}>
-                        <Card.Img variant="top" src={photo.segmented_photo.photo} style={{ width: '100%', height: 'auto', aspectRatio: '16/9' }} />
+                        <Card.Img variant="top" src={photo.user_photo.segmented_photo.photo} style={{ width: '100%', height: 'auto', aspectRatio: '16/9' }} />
                         <Card.Body>
                             <Card.Text>
-                                Uploaded by: {photo.owner.username}
+                                Uploaded by: {photo.user_photo.user.username}
                             </Card.Text>
                             {comments[photo.id] && comments[photo.id].map(comment => (
                                 <div key={comment.id} style={{ marginBottom: '10px', padding: '5px', border: '1px solid #ccc' }}>

@@ -17,11 +17,9 @@ class UserPhoto(models.Model):
     is_visible_to_team = models.BooleanField(default=False)
 
 class TeamPhoto(models.Model):
-    uploaded_photo = models.OneToOneField(UploadedPhoto, on_delete=models.CASCADE)
-    segmented_photo = models.OneToOneField(SegmentedPhoto, on_delete=models.CASCADE)
+    user_photo = models.OneToOneField(UserPhoto, on_delete=models.CASCADE, default=1)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='team_photo_owned')
     team = models.ForeignKey('Team', on_delete=models.CASCADE, related_name='team_photo')
-
 
 class Comment(models.Model):
     team_photo = models.ForeignKey(TeamPhoto, on_delete=models.CASCADE, default=1)
