@@ -11,6 +11,14 @@ const UserTeamPage = () => {
     const [teamPhotos, setTeamPhotos] = useState([]);
     const [comments, setComments] = useState([]);
     const [commentText, setCommentText] = useState('');
+    const [commentsTexts, setCommentsTexts] = useState({});
+
+    const handleCommentTextChange = (photoId, text) => {
+        setCommentsTexts(prevState => ({
+            ...prevState,
+            [photoId]: text
+        }));
+    };
 
     const fetchTeamPhotos = async () => {
         try {
@@ -181,7 +189,7 @@ const UserTeamPage = () => {
         const commentsData = await commentsResponse.json();
     };
 
-    const handleCommentSubmit = async (teamphotoId) => {
+    const handleCommentSubmit = async (teamphotoId, commentText) => {
         const authorId = parseInt(localStorage.getItem('id'))
         const userResponse = await fetch(`/api/user/${authorId}/`);
         const userData = await userResponse.json();
@@ -210,6 +218,9 @@ const UserTeamPage = () => {
             console.log('Комментарий успешно отправлен');
             fetchTeamPhotos();
             setCommentText('');
+            teamPhotos.forEach(photo => {
+                fetchPhotoComments(photo.id);
+            });
     
         } catch (error) {
             console.error('Error submitting comment:', error);
@@ -260,17 +271,16 @@ const UserTeamPage = () => {
                                 </div>
                             ))}
                             <Form.Group style={{ display: 'flex', alignItems: 'center' }}>
-                            <Form.Control 
-                                type="text" 
-                                placeholder="Add a comment" 
-                                style={{ marginRight: '10px' }} 
-                                value={commentText} 
-                                onChange={(e) => setCommentText(e.target.value)} 
-                            />
-                                <Button variant="primary" onClick={() => handleCommentSubmit(photo.id)}>
+                                <Form.Control 
+                                    type="text" 
+                                    placeholder="Add a comment" 
+                                    style={{ marginRight: '10px' }} 
+                                    value={commentsTexts[photo.id] || ''} // Обновленное состояние для текста комментария
+                                    onChange={(e) => handleCommentTextChange(photo.id, e.target.value)} // Изменение текста комментария
+                                />
+                                <Button variant="primary" onClick={() => handleCommentSubmit(photo.id, commentsTexts[photo.id])}>
                                     <FontAwesomeIcon icon={faPaperPlane} />
-                                </Button>
-                            </Form.Group>
+                                </Button>                            </Form.Group>
                         </Card.Body>
                     </Card>
                 </div>

@@ -26,6 +26,7 @@ function Account({ isAuthenticated }) {
                     if (response.ok) {
                         console.log('OK')
                         const userDataFromApi = await response.json();
+                        console.log(userDataFromApi)
                         setUserData(userDataFromApi);
                     } else if (response.status === 401) {
                       setRefreshRequired(true);
@@ -98,9 +99,11 @@ const handleSave = async () => {
             console.log('EditFinishingStarted')
 
             const updatedUserData = await response.json();
+            const modifiedResponse = { data: updatedUserData };
             console.log('GotResponse')
 
-            setUserData(updatedUserData);
+            setUserData(modifiedResponse);
+            console.log(modifiedResponse)
             console.log('StateUpdated')
 
             setEditMode(false);
