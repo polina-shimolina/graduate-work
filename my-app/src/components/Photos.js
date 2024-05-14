@@ -10,7 +10,7 @@ const Photos = () => {
   const userId = localStorage.getItem('id')
   const [selectedPhotos, setSelectedPhotos] = useState([]);
   const [teamId, setTeamId] = useState();
-
+  
 
   const getTeamId = async (userId) => {
     try {
@@ -33,19 +33,28 @@ const Photos = () => {
             console.error('Team ID not found');
             return;
         }
-
-        if (selectedPhotos.includes(photo)) {
+        console.log(selectedPhotos)
+        let isChecked = photo.is_visible_to_team
+        console.log(isChecked)
+        if (isChecked) {
+            // Убираем фото из выбранных
             setSelectedPhotos(selectedPhotos.filter(item => item !== photo));
+            console.log(selectedPhotos)
+            // Вызываем функцию updateTeamPhoto с передачей photo.id, teamId и false для снятия галочки
+            await updateTeamPhoto(photo.id, teamId, false, userId);
+            fetchUserPhotos(); // Обновляем фотографии пользователя
         } else {
+            // Добавляем фото в выбранные
             setSelectedPhotos([...selectedPhotos, photo]);
+            console.log(selectedPhotos)
+            // Вызываем функцию updateTeamPhoto с передачей photo.id, teamId и true для постановки галочки
+            await updateTeamPhoto(photo.id, teamId, true, userId);
+            fetchUserPhotos(); // Обновляем фотографии пользователя
         }
-
-        // Вызываем функцию updateTeamPhoto с передачей photo.id, teamId и selectedPhotos.includes(photo)
-        await updateTeamPhoto(photo.id, teamId, true, userId);
     } catch (error) {
         console.error('Error handling checkbox change:', error);
     }
-  };
+};
 
   const updateTeamPhoto = (photoId, teamId, checked) => {
       fetch(`/api/photo/${photoId}/${teamId}/${checked}/`, {
