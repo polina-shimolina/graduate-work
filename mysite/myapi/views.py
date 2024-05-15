@@ -8,7 +8,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes, authentication_classes, action
-from myapi.serializers import UserSerializer, LoginRequestSerializer
+from myapi.serializers import UserSerializer, LoginRequestSerializer, CommentCreateSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.contrib.auth import authenticate, login, logout
@@ -347,7 +347,7 @@ class CommentViewSet(viewsets.ModelViewSet):
     def create(self, request, teamphoto_id=None):
         team_photo = TeamPhoto.objects.get(pk=teamphoto_id)
         request.data['team_photo'] = team_photo.id  # Заменяем ID на объект TeamPhoto
-        serializer = CommentSerializer(data=request.data)
+        serializer = CommentCreateSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
