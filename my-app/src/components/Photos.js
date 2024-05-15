@@ -9,9 +9,7 @@ const Photos = () => {
   const [uploadedPhotos, setUploadedPhotos] = useState([]);
   const userId = localStorage.getItem('id')
   const [selectedPhotos, setSelectedPhotos] = useState([]);
-  const [teamId, setTeamId] = useState();
-  const [isCheckedGlobal, setIsCheckedGlobal] = useState(true);
-
+  const [isCheckedArray, setIsCheckedArray] = useState([]);
   const getTeamId = async (userId) => {
     try {
         const response = await fetch(`/api/user/${userId}/team/`);
@@ -26,7 +24,7 @@ const Photos = () => {
     }
   };
 
-  const handleCheckboxChange = async (photo) => {
+  const handleCheckboxChange = async (photo, index) => {
     try {
         const teamId = await getTeamId(userId); // Получаем teamId асинхронно
         if (!teamId) {
@@ -36,20 +34,23 @@ const Photos = () => {
         console.log(selectedPhotos)
         let isChecked = photo.is_visible_to_team
         console.log(isChecked)
+        const updatedIsCheckedArray = [...isCheckedArray];
+        updatedIsCheckedArray[index] = !updatedIsCheckedArray[index];
+        setIsCheckedArray(updatedIsCheckedArray);
         if (isChecked) {
             // Убираем фото из выбранных
             setSelectedPhotos(selectedPhotos.filter(item => item !== photo));
             console.log(selectedPhotos)
             // Вызываем функцию updateTeamPhoto с передачей photo.id, teamId и false для снятия галочки
             await updateTeamPhoto(photo.id, teamId, false, userId);
-            fetchUserPhotos(); // Обновляем фотографии пользователя
+            //fetchUserPhotos(); // Обновляем фотографии пользователя
         } else {
             // Добавляем фото в выбранные
             setSelectedPhotos([...selectedPhotos, photo]);
             console.log(selectedPhotos)
             // Вызываем функцию updateTeamPhoto с передачей photo.id, teamId и true для постановки галочки
             await updateTeamPhoto(photo.id, teamId, true, userId);
-            fetchUserPhotos(); // Обновляем фотографии пользователя
+            //fetchUserPhotos(); // Обновляем фотографии пользователя
         }
     } catch (error) {
         console.error('Error handling checkbox change:', error);
@@ -137,7 +138,7 @@ const Photos = () => {
               };
           }); // Получаем массив сегментированных фотографий
             setUploadedPhotos(segmentedPhotos);
-            setIsCheckedGlobal(uploadedPhotos.is_visible_to_team)
+            setIsCheckedArray(segmentedPhotos.map(photo => photo.is_visible_to_team));
             console.log(segmentedPhotos.length);
             console.log(segmentedPhotos);
         } else {
@@ -148,9 +149,12 @@ const Photos = () => {
     }
 };
   useEffect(() => {
-  
-    fetchUserPhotos();
-}, [userId]);
+    const fetchData = async () => {
+      await fetchUserPhotos();
+  };
+
+  fetchData();
+}, []);
 
   return (
     <div className="container">
@@ -193,8 +197,8 @@ const Photos = () => {
                       <Card.Body>
                         <Form.Check
                           type="checkbox"
-                          checked={isCheckedGlobal}
-                          onChange={() => handleCheckboxChange(photo)}
+                          checked={isCheckedArray[index]}
+                          onChange={() => handleCheckboxChange(photo, index)}
                           label="Добавить на страницу команды"
                           onClick={(e) => e.stopPropagation()}
                         />
