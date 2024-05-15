@@ -220,6 +220,7 @@ const UserTeamPage = () => {
             console.log('Комментарий успешно отправлен');
             fetchTeamPhotos();
             setCommentText('');
+            console.log(teamPhotos)
             teamPhotos.forEach(photo => {
                 fetchPhotoComments(photo.id);
             });

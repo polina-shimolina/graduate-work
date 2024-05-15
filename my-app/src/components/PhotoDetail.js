@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { Card, Row, Col } from 'react-bootstrap';
+import { useParams, Link } from 'react-router-dom';
+import { Card, Row, Col, Button } from 'react-bootstrap';
 
 const PhotoDetail = () => {
     const { id } = useParams();
@@ -22,9 +22,11 @@ const PhotoDetail = () => {
 
     return (
         <div>
+            <Link to="/photos" style={{ position: 'absolute', top: '100px', left: '10px', zIndex: 1000 }}>
+                <Button variant="primary">&#8592; Назад к фотографиям</Button>
+            </Link>
             {photoData && (
-                
-                <Row style={{ marginLeft: '300px', marginRight: '300px'  }}>
+                <Row style={{ marginLeft: '300px', marginRight: '300px' }}>
                     <h3>Изображения</h3>
                     <Col>
                         <Card className="mx-2 my-2">
@@ -39,13 +41,14 @@ const PhotoDetail = () => {
                             <Card.Img variant="top" src={photoData.segmented_photo.photo} />
                             <Card.Body>
                                 <Card.Title>Сегментированное фото</Card.Title>
-                            </Card.Body> 
+                            </Card.Body>
                         </Card>
                     </Col>
                 </Row>
             )}
         </div>
     );
+    
 };
 
 export default PhotoDetail;
