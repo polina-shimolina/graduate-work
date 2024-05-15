@@ -10,7 +10,6 @@ const UserTeamPage = () => {
     const [teamUsers, setTeamUsers] = useState([]);
     const [teamPhotos, setTeamPhotos] = useState([]);
     const [comments, setComments] = useState([]);
-    const [commentText, setCommentText] = useState('');
     const [commentsTexts, setCommentsTexts] = useState({});
 
     const handleCommentTextChange = (photoId, text) => {
@@ -219,7 +218,11 @@ const UserTeamPage = () => {
     
             console.log('Комментарий успешно отправлен');
             fetchTeamPhotos();
-            setCommentText('');
+            setCommentsTexts(prevState => ({
+                ...prevState,
+                [teamphotoId]: ''
+            }));
+
             console.log(teamPhotos)
             teamPhotos.forEach(photo => {
                 fetchPhotoComments(photo.id);
