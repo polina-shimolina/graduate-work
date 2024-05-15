@@ -10,7 +10,7 @@ const Photos = () => {
   const userId = localStorage.getItem('id')
   const [selectedPhotos, setSelectedPhotos] = useState([]);
   const [teamId, setTeamId] = useState();
-  
+  const [isCheckedGlobal, setIsCheckedGlobal] = useState(true);
 
   const getTeamId = async (userId) => {
     try {
@@ -137,6 +137,7 @@ const Photos = () => {
               };
           }); // Получаем массив сегментированных фотографий
             setUploadedPhotos(segmentedPhotos);
+            setIsCheckedGlobal(uploadedPhotos.is_visible_to_team)
             console.log(segmentedPhotos.length);
             console.log(segmentedPhotos);
         } else {
@@ -192,7 +193,7 @@ const Photos = () => {
                       <Card.Body>
                         <Form.Check
                           type="checkbox"
-                          checked={photo.is_visible_to_team}
+                          checked={isCheckedGlobal}
                           onChange={() => handleCheckboxChange(photo)}
                           label="Добавить на страницу команды"
                           onClick={(e) => e.stopPropagation()}
