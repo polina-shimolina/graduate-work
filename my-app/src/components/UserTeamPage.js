@@ -140,7 +140,8 @@ const UserTeamPage = () => {
                 if (teamCheckResponse.ok) {
                     const teamData = await teamCheckResponse.json();
                     if (teamData.team_id) {
-                        console.log(`Пользователь  уже состоите в команде`);
+                        console.log(`Пользователь уже состоит в команде`);
+                        alert('Пользователь уже состоит в команде.');
                         return;
                     }
                 } else {
@@ -149,6 +150,7 @@ const UserTeamPage = () => {
                 }
 
                 if (userData.team_id) {
+                    alert(`Пользователь ${username} уже состоит в команде`);
                     console.log(`Пользователь ${username} уже состоит в команде`);
                     return;
                 }

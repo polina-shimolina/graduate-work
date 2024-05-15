@@ -63,7 +63,7 @@ class LoginRequestSerializer(Serializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    author = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    author = UserSerializer()
     class Meta:
         model = Comment
         fields = '__all__'
