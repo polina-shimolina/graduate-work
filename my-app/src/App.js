@@ -53,7 +53,7 @@ function App() {
             <Header logged = {isAuthenticated}/>
           </AuthProvider>
           <Routes style={{ flex: 1 }}>
-            <Route path="/" element={<><h1>Сегментируйте свои изображения с удовольствием</h1><h3>1000000 пользователей уже воспользовались и оценили наш сервис</h3><Main /></>}/>
+            <Route path="/" element={<><Main /></>}/>
             <Route path="/about" element={<><About /></>}/>
             <Route path="/photos" element={<><Photos /></>}/>
             <Route path="/login" element={<Login onLogin={handleLogin} />} />

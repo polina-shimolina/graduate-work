@@ -14,7 +14,7 @@ const Header_UnAuthorised = () => {
                 </a>
                 <ul className="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
                     <li><Link to="/" className="nav-link px-2 link-dark">Главная</Link></li>
-                    <li><Link to="/about" className="nav-link px-2 link-dark">О сервисе</Link></li>
+                    {/*<li><Link to="/about" className="nav-link px-2 link-dark">О сервисе</Link></li>*/}
                     <li><Link to="/login" className="nav-link px-2 link-dark">Войти</Link></li>
                     <li><Link to="/register" className="nav-link px-2 link-dark">Зарегистрироваться</Link></li>
                 </ul>

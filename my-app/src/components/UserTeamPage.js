@@ -73,6 +73,10 @@ const UserTeamPage = () => {
     };
     
     useEffect(() => {
+        fetchTeamData();
+    }, []);
+
+    useEffect(() => {
         if (team) {
             fetchTeamUsers();
             fetchTeamPhotos();
@@ -95,9 +99,7 @@ const UserTeamPage = () => {
         }
     };
 
-    useEffect(() => {
-        fetchTeamData();
-    }, []);
+    
 
     
     const handleLeaveTeamClick = async () => {
