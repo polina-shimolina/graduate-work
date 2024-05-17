@@ -156,8 +156,17 @@ const Photos = () => {
   fetchData();
 }, []);
 
+if(!localStorage.getItem('accessToken')){
+  return (
+    <div style={{ textAlign: 'center', marginTop: '20px' }}>
+    <p>Тебе нужно войти в свой аккаунт прежде чем начать работать с сервисом</p>
+  </div>
+  );
+}
+
   return (
     <div className="container">
+      
       <h1 style={{ textAlign: 'center' }}>
         Загрузка файла
         <span className="question-mark" 
@@ -219,7 +228,9 @@ const Photos = () => {
           <p style={{ textAlign: 'center' }}>Вы пока не добавили ни одного изображения, поэтому в вашей галерее пусто(( Загрузите свое первое изображение.</p>
         )}
       </div>
+
     </div>
+    
   );
 };
 

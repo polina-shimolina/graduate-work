@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './style/UserTeamPage.css'; // Импорт стилей для карточки
+//import './style/card-hover.css'; // Импорт стилей для карточки
 import { Card, Form, Button } from 'react-bootstrap'; // Импортируем компоненты Card, Form и Button из react-bootstrap
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; // Импортируем компонент FontAwesomeIcon из Font Awesome
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'; // Импортируем иконку для кнопки отправки
@@ -237,7 +237,7 @@ const UserTeamPage = () => {
 
     return (
     <div className="container mt-4">
-        {team && (
+        {localStorage.getItem('accessToken') && team && (
             <div>
                 <div className="d-flex justify-content-between align-items-center mb-3">
                     <div>

@@ -32,7 +32,9 @@ const Team = ({ isAuthenticated }) => {
 
     return (
         <div className="container mt-4">
-            {isAuthenticated ? (hasTeam ? <UserTeamPage /> : <NoTeamPage />) : null}
+            {isAuthenticated ? (hasTeam ? <UserTeamPage /> : <NoTeamPage />) : <div style={{ textAlign: 'center', marginTop: '20px' }}>
+            <p>Тебе нужно войти в свой аккаунт прежде чем начать работать в команде</p>
+        </div>}
         </div>
     );
 };
