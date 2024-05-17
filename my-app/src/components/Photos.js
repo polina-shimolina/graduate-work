@@ -158,7 +158,13 @@ const Photos = () => {
 
   return (
     <div className="container">
-      <h1 style={{ textAlign: 'center' }}>Загрузка файла</h1>
+      <h1 style={{ textAlign: 'center' }}>
+        Загрузка файла
+        <span className="question-mark" 
+                            title="На этой странице ты можешь сегментировать свое фото. Нажми на кнопку ''Choose file'' и выбери фото, затем нажми ''Open'' и ''Отправить на сервер''. В результате твое фото окажется в галерее, вместе с ранее обработанными фото."
+                            >?
+                            </span>
+      </h1>
 
       <form onSubmit={(e) => e.preventDefault()} style={{ textAlign: 'center', marginBottom: '50px' }}>
         <div className="form-group">

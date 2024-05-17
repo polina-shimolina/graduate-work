@@ -27,7 +27,14 @@ const PhotoDetail = () => {
             </Link>
             {photoData && (
                 <Row style={{ marginLeft: '300px', marginRight: '300px' }}>
-                    <h3>Изображения</h3>
+                    <h3>
+                        Изображения
+                        <span className="question-mark" 
+                            title="На этой странице можешь посмотреть на фото, которое ты загрузил, и получил в результате сегментации.
+                            При нажатии на кнопку ''Назад к фотографиям'' ты вернешься на страницу с галереей."
+                            >?
+                            </span>
+                    </h3>
                     <Col>
                         <Card className="mx-2 my-2">
                             <Card.Img variant="top" src={photoData.uploaded_photo.photo} />
