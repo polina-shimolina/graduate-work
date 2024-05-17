@@ -122,7 +122,6 @@ function Login({ onLogin }) {
         onLogin()
         
         navigate('/')
-        //window.location.reload();
            })
            .catch(error => {
              console.log(error)
@@ -152,7 +151,7 @@ function Login({ onLogin }) {
                   </div>
                   <div className="row">
                       <div className="col mx-auto">
-                          <button className="btn btn-primary" type="submit">Войти</button>
+                          <button className="btn btn-primary" style={{ color: 'white', backgroundColor: '#32CD32', border: '1px solid #32CD32'  }} type="submit">Войти</button>
                       </div>
                   </div>
                   <div className="row mt-3">

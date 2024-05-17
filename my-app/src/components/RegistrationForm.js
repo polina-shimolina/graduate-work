@@ -131,7 +131,7 @@ function Register({ onRegister }) {
 
             <div className="row">
               <div className="col mx-auto">
-                <button className="btn btn-primary" type="submit">Зарегистрироваться</button>
+                <button className="btn btn-primary" style={{ color: 'white', backgroundColor: '#32CD32', border: '1px solid #32CD32'  }} type="submit">Зарегистрироваться</button>
               </div>
             </div>
             <div className="row mt-3">

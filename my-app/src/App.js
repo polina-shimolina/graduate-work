@@ -14,6 +14,7 @@ import PhotoDetail from './components/PhotoDetail';
 import UserGuide from './components/UserGuide';
 import './App.css';
 import { AuthProvider } from './components/AuthContext';
+import ErrorPage from './components/ErrorPage';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -55,6 +56,7 @@ function App() {
           </AuthProvider>
           <Routes style={{ flex: 1 }}>
             <Route path="/" element={<><Main /></>}/>
+            <Route path="*" element={<><ErrorPage /></>}/>
             <Route path="/about" element={<><About /></>}/>
             <Route path="/photos" element={<><Photos /></>}/>
             <Route path="/login" element={<Login onLogin={handleLogin} />} />

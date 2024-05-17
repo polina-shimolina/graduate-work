@@ -78,7 +78,7 @@ const NoTeamPage = () => {
                 <textarea placeholder="Введите описание команды" value={teamDescription} onChange={(e) => setTeamDescription(e.target.value)} style={{ width: '100%', padding: '8px', minHeight: '80px' }} />
             </div>
             <div>
-                <button className="btn btn-primary mt-2" onClick={handleCreateTeam}>Создать команду</button>
+                <button className="btn btn-primary mt-2" style={{ color: 'white', backgroundColor: '#32CD32', border: '1px solid #32CD32'  }} onClick={handleCreateTeam}>Создать команду</button>
             </div>
         </div>
     );
