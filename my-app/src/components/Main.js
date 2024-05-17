@@ -24,11 +24,13 @@ const Main = () => {
             <h3>Присоединяйтесь к нам и узнайте больше о возможностях нашего сервиса!</h3>
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '30px'}}>
             {token ? (
-                    <Link to="/photos">Испытать сервис</Link>
+                    <Link to="/photos" style={{ marginRight: '10px' }}>Испытать сервис</Link>
                 ) : (
-                    <Link to="/login">Испытать сервис</Link>
-                )}
-                </div>
+                    <Link to="/login" style={{ marginRight: '10px' }}>Испытать сервис</Link>
+                )}<Link to="/userguide">Ознакомиться с руководством пользователя</Link>
+</div>
+                
+
         </div>
     
     <div style={{ display: 'flex', justifyContent: 'center', maxWidth: '1000px', width: '100%' , margin: 'auto' }}>
