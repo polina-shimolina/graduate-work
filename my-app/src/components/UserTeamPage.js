@@ -26,11 +26,9 @@ const UserTeamPage = () => {
                 throw new Error('Failed to fetch team photos');
             }
             const data = await response.json();
-            console.log(data);
             setTeamPhotos(data); 
-            data.forEach(photo => {
-                fetchPhotoComments(photo.id);
-            });
+            const commentsPromises = data.map(photo => fetchPhotoComments(photo.id));
+            await Promise.all(commentsPromises);
         } catch (error) {
             console.error('Error fetching team photos:', error);
         }
@@ -45,7 +43,7 @@ const UserTeamPage = () => {
             const commentsData = await response.json();
             console.log(commentsData);
         
-            const updatedComments = {};
+            /* const updatedComments = {};
             commentsData.forEach(comment => {
                 if (!updatedComments[comment.team_photo]) {
                     updatedComments[comment.team_photo] = [];
@@ -53,7 +51,13 @@ const UserTeamPage = () => {
                 updatedComments[comment.team_photo].push(comment);
             });
         
-            setComments(updatedComments);
+            setComments(updatedComments); */
+            setComments(prevComments => {
+                return {
+                    ...prevComments,
+                    [teamphotosId]: commentsData
+                };
+            });
         } catch (error) {
             console.error('Error fetching comments:', error);
         }
@@ -152,6 +156,7 @@ const UserTeamPage = () => {
 
                 if (userData.team_id) {
                     alert(`Пользователь ${username} уже состоит в команде`);
+                    setUsername('')
                     console.log(`Пользователь ${username} уже состоит в команде`);
                     return;
                 }
