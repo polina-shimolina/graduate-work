@@ -69,7 +69,7 @@ const NoTeamPage = () => {
         <div className="container text-center mt-4">
             <h2>
                 Вы не состоите в команде
-                <span className="question-mark" title="Для создания команды введи в соответствующие поля название команды и ее описание и нажми кнопку ''Создать команду''">?</span>
+                <span className="question-mark" title="Для создания команды введи в соответствующие поля название команды и ее описание и нажми кнопку &quot;Создать команду&quot;">?</span>
             </h2>
             <p>Создайте новую команду или дождитесь приглашения</p>
             <div style={{ maxWidth: '230px', margin: '0 auto' }}>
