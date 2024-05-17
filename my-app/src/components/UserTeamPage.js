@@ -258,7 +258,7 @@ const UserTeamPage = () => {
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
     <div style={{ display: 'flex', alignItems: 'center' }}>
         <input type="text" placeholder="Введите юзернейм" value={username} style={{ marginRight: '10px' }} onChange={handleUsernameChange} />
-        <button className="btn btn-primary" style={{ color: 'white', backgroundColor: '#32CD32', border: '1px solid #228B22'  }} onClick={handleInviteClick}>Пригласить в команду</button>
+        <button className="btn btn-primary" style={{ color: 'white', backgroundColor: '#32CD32', border: '1px solid #32CD32'  }} onClick={handleInviteClick}>Пригласить в команду</button>
     </div>
     <button className="btn btn-danger mt-2" onClick={handleLeaveTeamClick}>Выйти из команды</button>
 </div>

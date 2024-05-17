@@ -123,16 +123,22 @@ return (
     <div className="text-center">
         {isAuthenticated && userData ? (
             <div className="text-center">
-                <h3 className="mb-2">Привет, {userData.data.first_name} {userData.data.last_name}</h3>
+                <h1 className="mb-2">
+                    Привет, {userData.data.first_name} {userData.data.last_name}
+                    <span className="question-mark" 
+                            title="На этой странице ты видишь свои данные. Чтобы их отредактировать нажми на кнопку в виде карандаша, введи в соответствующие поля новые данные и нажми &quot;Сохранить&quot;. Если передумал, то нажимай &quot;Отмена&quot;."
+                            >?
+                    </span>
+                </h1>
                 <div className="card mx-auto mt-4" style={{ maxWidth: '400px' }}>
                     <div className="card-body">
                         <div>
                             {editMode ? (
                                 <>
-                                    <div className="container">
+                                    <div className="container-fluid">
                                         <h4 className="card-subtitle mb-3 text-muted">Отредактируй свой профиль</h4>
                                         <div className="row justify-content-center">
-                                            <div className="col-md-6">
+                                            <div className="col-md-9">
                                                 <div className="mb-3">
                                                     <input
                                                         type="text"
@@ -164,8 +170,8 @@ return (
                                                     />
                                                 </div>
                                                 <div className="d-flex justify-content-between">
-                                                    <button onClick={handleSave} className="btn btn-secondary" style={{ marginRight: '10px' }}>Сохранить</button>
-                                                    <button onClick={() => setEditMode(false)} className="btn btn-secondary">Отмена <FaTimes /></button>
+                                                    <button onClick={handleSave} className="btn btn-secondary" style={{ color: 'white', backgroundColor: '#32CD32', border: '1px solid #32CD32', marginRight: '10px' }}>Сохранить</button>
+                                                    <button onClick={() => setEditMode(false)} className="btn btn-danger" >Отмена <FaTimes /></button>
                                                 </div>                                         
                                             </div>
                                         </div>
