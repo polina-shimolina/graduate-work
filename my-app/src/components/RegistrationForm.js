@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import './style/a.css'
 
 function Register({ onRegister }) {
   const [loading, setLoading] = useState(false);

@@ -1,0 +1,12 @@
+a {
+    color: LimeGreen; /* Здесь можно указать любой другой цвет, например, красный */
+    text-decoration: none; /* Убрать подчеркивание у ссылок, если не нужно */
+}
+
+a:hover {
+    color: DeepPink; /* Цвет ссылки при наведении курсора мыши */
+}
+
+a:visited {
+    color: PaleVioletRed;
+  }

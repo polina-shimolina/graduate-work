@@ -185,7 +185,7 @@ const Photos = () => {
               alt="Preview" 
               style={{ marginBottom: '20px', display: 'block', marginLeft: 'auto', marginRight: 'auto' }}
             />
-            <button className="btn btn-secondary" onClick={handleUploadFile}>Отправить файл на сервер</button>
+            <button className="btn btn-secondary" style={{ color: 'white', backgroundColor: '#32CD32', borderBlockColor: '#32CD32' }} onClick={handleUploadFile} >Отправить файл на сервер</button>
           </div>
         )}
       </form>

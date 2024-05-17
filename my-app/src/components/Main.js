@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Carousel } from 'react-bootstrap';
 import { Link } from "react-router-dom";
+import './style/a.css'
 
 import image1 from '../assets/image1.jpg'; 
 import image2 from '../assets/image2.jpg';
@@ -11,14 +12,16 @@ const Main = () => {
   return (
     <div style={{ display: 'flex', justifyContent: 'center' }}>
       <div style={{ maxWidth: '1000px', width: '100%' }}>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <div style={{ display: 'flex'}}>
         <h1>О сервисе</h1>
         </div>
         <div>
+          <h3>Для чего</h3>
             <p>Сервис предназначен для автоматической сегментации объектов на изображениях с использованием машинного обучения.</p>
             <p>Этот инновационный инструмент поможет вам выделить объекты на фотографиях и улучшить процесс анализа изображений.</p>
+          <h3>Технология</h3>
             <p>В основе технологии лежит архитектура U-Net. Архитектура сети представляет собой полносвязную свёрточную сеть, модифицированную так, чтобы она могла работать с меньшим количеством примеров (обучающих образов) и делала более точную сегментацию.</p>
-            <p>Присоединяйтесь к нам и узнайте больше о возможностях нашего сервиса!</p>
+            <h3>Присоединяйтесь к нам и узнайте больше о возможностях нашего сервиса!</h3>
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '30px'}}>
             {token ? (
                     <Link to="/photos">Испытать сервис</Link>

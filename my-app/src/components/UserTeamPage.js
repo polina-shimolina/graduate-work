@@ -241,7 +241,7 @@ const UserTeamPage = () => {
             <div>
                 <div className="d-flex justify-content-between align-items-center mb-3">
                     <div>
-                        <h2>
+                        <h1>
                             Ты в команде "{team.team_name}"
                             <span className="question-mark" 
                             title="Это страница твоей команды, здесь информация о ее создателе, список участников, 
@@ -251,15 +251,18 @@ const UserTeamPage = () => {
                             Для добавления нового участника введи в поле &quot;Введите юзернейм&quot; его имя и воспользуйся кнопкой &quot;Пригласить в команду&quot;"
                             >?
                             </span>
-                        </h2>
+                        </h1>
                         <p>Автор: {team.team_creator}</p>
                         <p>{team.description}</p>
                     </div>
-                    <div>
-                        <input type="text" placeholder="Введите юзернейм" value={username} onChange={handleUsernameChange} />
-                        <button className="btn btn-primary ml-2" onClick={handleInviteClick}>Пригласить в команду</button>
-                        <button className="btn btn-danger ml-2" onClick={handleLeaveTeamClick}>Выйти из команды</button>
-                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+    <div style={{ display: 'flex', alignItems: 'center' }}>
+        <input type="text" placeholder="Введите юзернейм" value={username} style={{ marginRight: '10px' }} onChange={handleUsernameChange} />
+        <button className="btn btn-primary" style={{ color: 'white', backgroundColor: '#32CD32', border: '1px solid #228B22'  }} onClick={handleInviteClick}>Пригласить в команду</button>
+    </div>
+    <button className="btn btn-danger mt-2" onClick={handleLeaveTeamClick}>Выйти из команды</button>
+</div>
+
                 </div>
                 <div>
                     <h3>Наша команда:</h3>
