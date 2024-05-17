@@ -28,6 +28,7 @@ const Photos = () => {
     try {
         const teamId = await getTeamId(userId); // Получаем teamId асинхронно
         if (!teamId) {
+            window.alert('Похоже ты не состоишь в команде. Ты можешь создать новую на странице "Моя команда"')
             console.error('Team ID not found');
             return;
         }

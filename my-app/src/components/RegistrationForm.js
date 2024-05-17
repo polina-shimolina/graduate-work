@@ -52,7 +52,7 @@ function Register({ onRegister }) {
       })
       .catch((error) => {
         console.log(error);
-        setError('Ошибка, подробности в консоли');
+        window.alert('Пользователь с таким именем уже существует.');
       })
       .finally(() => setLoading(false));
   };
@@ -74,6 +74,7 @@ function Register({ onRegister }) {
                   value={formUsername}
                   onChange={(e) => setFormUsername(e.target.value)}
                   placeholder="Username"
+                  required
                 />
               </div>
             </div>
@@ -99,6 +100,7 @@ function Register({ onRegister }) {
                   value={formPassword}
                   onChange={(e) => setFormPassword(e.target.value)}
                   placeholder="Password"
+                  required
                 />
               </div>
             </div>

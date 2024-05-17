@@ -125,7 +125,7 @@ function Login({ onLogin }) {
            })
            .catch(error => {
              console.log(error)
-             setError('Ошибка, подробности в консоли')
+             window.alert('Пользователя с таким именем не существует, воспользуйся формой для регистрации.');
            })
       .finally(setLoading(false))
     }
@@ -156,7 +156,7 @@ function Login({ onLogin }) {
                   </div>
                   <div className="row mt-3">
                       <div className="col mx-auto">
-                          <a href="/register" className="text-decoration-underline">Еще нет аккаунта? Зарегистрируйтесь</a>
+                          <a href="/register" className="text-decoration-underline">Еще нет аккаунта? Зарегистрируйся</a>
                       </div>
                   </div>
               </form>

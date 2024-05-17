@@ -33,7 +33,11 @@ const NoTeamPage = () => {
             if (response.ok) {
                 return response.json();
             }
+            if (teamName === '' || teamDescription === '') {
+                window.alert('Поля не могут быть пустыми');
+            }
             throw new Error('Ошибка при создании команды');
+            
         })
         .then(data => {
             console.log('Команда успешно создана:', data);
