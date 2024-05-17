@@ -58,8 +58,9 @@ function Register({ onRegister }) {
 
   return (
     <div className="App">
-      {loading ? (
-          <p className="loading-message">Загрузка...</p>
+  
+      {localStorage.getItem('accessToken') ? (
+          <p>Вы уже вошли в систему.</p>
         ) : (
           <form className="container mt-4 text-center" onSubmit={submitHandler}>
             <h2>Регистрация</h2>

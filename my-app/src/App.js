@@ -11,6 +11,7 @@ import Account from './components/Account';
 import Register from './components/RegistrationForm'
 import Team from './components/Team'
 import PhotoDetail from './components/PhotoDetail';
+import UserGuide from './components/UserGuide';
 import './App.css';
 import { AuthProvider } from './components/AuthContext';
 
@@ -62,6 +63,7 @@ function App() {
             <Route path="/profile" element={<Account isAuthenticated={isAuthenticated} />} />
             <Route path="/team" element={<Team isAuthenticated={isAuthenticated}/>} />
             <Route path="/photos/:id" element={<PhotoDetail />} />
+            <Route path="/userguide" element={<UserGuide />} />
           </Routes>
           <Footer className="footer" />
         </div>

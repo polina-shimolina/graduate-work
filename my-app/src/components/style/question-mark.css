@@ -1,0 +1,27 @@
+.title {
+    position: relative;
+    font-size: 0.5em;
+}
+
+.question-mark {
+    font-size: 0.8em; /* Размер шрифта знака вопроса */
+    color: blue; /* Цвет знака вопроса */
+    cursor: help; /* Изменение курсора при наведении */
+    position: relative;
+    top: -10px;
+    left: 2px; /* Расположение знака вопроса относительно заголовка */
+}
+.question-mark:hover::after {
+    content: attr(title); /* Отображение текста подсказки при наведении */
+    position: absolute;
+    background-color: lightgray;
+    color: black;
+    padding: 5px; /* Увеличенный отступ внутри подсказки */
+    border-radius: 5px;
+    z-index: 1;
+    bottom: 0; /* Прикрепление нижнего края подсказки к знаку вопроса */
+    left: 0; /* Прикрепление левого края подсказки к знаку вопроса */
+    width: 400px; /* Ширина подсказки */
+    text-align: left;
+}
+

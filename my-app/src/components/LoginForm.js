@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import { useAuth } from './AuthContext';
 
 function Login({ onLogin }) {
   const [access, setAccess] = useState()
@@ -22,7 +22,6 @@ function Login({ onLogin }) {
   const [dateJoined, setDateJoined] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
-
 
   useEffect(() => {
     if (refreshRequired) {
@@ -134,41 +133,36 @@ function Login({ onLogin }) {
     
     
 
-  return (
-    <div className="App">
-      {error? <p>{error}</p> : null}
-      {!access?
-      loading? "Загрузка..." :
-      <form className="container mt-4 text-center" onSubmit={submitHandler}>
-          <h2>Вход</h2>
-          <div className="row">
-        <div className="col-sm-6 mx-auto">
-          <input className="form-control mb-3" type="text" name="username" value={formUsername} onChange={e => setFormUsername(e.target.value)} placeholder="Username"/>
-          </div>
-        </div>
-        <div className="row">
-        <div className="col-sm-6 mx-auto">
-          <input className="form-control mb-3" type="password" name="password" value={formPassword} onChange={e => setFormPassword(e.target.value)} placeholder="Password"/>
-          </div>
-        </div>
-        <div className="row">
-        <div className="col mx-auto">
-          <button className="btn btn-primary" type="submit">Войти</button>
-        </div>
-        </div>
-        <div className="row mt-3">
-        <div className="col mx-auto">
-            <a href="/register" className="text-decoration-underline">Еще нет аккаунта? Зарегистрируйтесь</a>
-        </div>
-    </div>
-      </form>
-      :
-      !error?
-        null
-        :
-        null
-      }
-    </div>
+    return (
+      <div className="App">
+          {localStorage.getItem('accessToken') ? (
+              <p>Вы уже вошли в систему.</p>
+          ) : (
+              <form className="container mt-4 text-center" onSubmit={submitHandler}>
+                  <h2>Вход</h2>
+                  <div className="row">
+                      <div className="col-sm-6 mx-auto">
+                          <input className="form-control mb-3" type="text" name="username" value={formUsername} onChange={e => setFormUsername(e.target.value)} placeholder="Username"/>
+                      </div>
+                  </div>
+                  <div className="row">
+                      <div className="col-sm-6 mx-auto">
+                          <input className="form-control mb-3" type="password" name="password" value={formPassword} onChange={e => setFormPassword(e.target.value)} placeholder="Password"/>
+                      </div>
+                  </div>
+                  <div className="row">
+                      <div className="col mx-auto">
+                          <button className="btn btn-primary" type="submit">Войти</button>
+                      </div>
+                  </div>
+                  <div className="row mt-3">
+                      <div className="col mx-auto">
+                          <a href="/register" className="text-decoration-underline">Еще нет аккаунта? Зарегистрируйтесь</a>
+                      </div>
+                  </div>
+              </form>
+          )}
+      </div>
   );
 }
 

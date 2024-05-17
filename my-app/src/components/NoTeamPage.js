@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './style/question-mark.css'
 
 const NoTeamPage = () => {
     const [teamName, setTeamName] = useState('');
@@ -66,7 +67,10 @@ const NoTeamPage = () => {
 
     return (
         <div className="container text-center mt-4">
-            <h2>Вы не состоите в команде</h2>
+            <h2>
+                Вы не состоите в команде
+                <span className="question-mark" title="Для создания команды введи в соответствующие поля название команды и ее описание и нажми кнопку ''Создать команду''">?</span>
+            </h2>
             <p>Создайте новую команду или дождитесь приглашения</p>
             <div style={{ maxWidth: '230px', margin: '0 auto' }}>
                 <input type="text" placeholder="Введите название команды" value={teamName} onChange={(e) => setTeamName(e.target.value)} style={{ width: '100%', padding: '8px', marginBottom: '10px' }} />
