@@ -39,7 +39,7 @@ const Main = () => {
         <img 
           className="d-block w-100"
           src={image1}
-          alt="Happy person 1" 
+          alt="Image 1" 
         />
       </Carousel.Item>  
 
@@ -47,7 +47,7 @@ const Main = () => {
         <img
           className="d-block w-100"
           src={image2}
-          alt="Happy person 2"
+          alt="Image 2"
         />
       </Carousel.Item>
 
@@ -55,7 +55,7 @@ const Main = () => {
         <img
           className="d-block w-100"
           src={image3}
-          alt="Happy person 3" 
+          alt="Image 3" 
         />
       </Carousel.Item>
     </Carousel>
