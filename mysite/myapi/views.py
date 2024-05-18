@@ -46,7 +46,6 @@ from torchviz import make_dot
 
 from PIL import Image
 import cv2
-import albumentations as A
 
 import time
 import os
@@ -55,8 +54,11 @@ from tqdm.notebook import tqdm
 from torchsummary import summary
 import segmentation_models_pytorch as smp
 
+from django.core.files.base import ContentFile
+import numpy as np
+import io
 
-from mysite.ml_model.predict import predict
+from ml_model.predict import predict
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -91,11 +93,14 @@ class UploadPhotoView(APIView):
             logger.info("Uploaded photo saved")
             user = request.user
             logger.info("User retrieved")
-            # Создаем объект SegmentedPhoto
             segmented_photo = SegmentedPhoto()
-            # Копируем загруженное изображение в объект SegmentedPhoto
+            transformed_image = predict(uploaded_photo.photo.path)
 
-            segmented_photo.photo.save(uploaded_photo.photo.name, ContentFile(uploaded_photo.photo.read()))
+            image_pil = Image.fromarray(np.uint8(transformed_image))
+            temp_buffer = io.BytesIO()
+            image_pil.save(temp_buffer, format='PNG')
+
+            segmented_photo.photo.save('segmented_image.jpg', ContentFile(temp_buffer.getvalue()), save=False)
             segmented_photo.save()
             logger.info("Segmented photo created and saved")
 

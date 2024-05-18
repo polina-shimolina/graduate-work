@@ -15,7 +15,6 @@ from torchviz import make_dot
 
 from PIL import Image
 import cv2
-import albumentations as A
 
 import time
 import os
@@ -24,60 +23,7 @@ from tqdm.notebook import tqdm
 from torchsummary import summary
 import segmentation_models_pytorch as smp
 
-
-class DroneTestDataset(Dataset):
-  """
-  Пользовательский датасет для тестирования модели дронов на изображениях.
-
-  Args:
-  - img_path (str): Путь к папке с изображениями.
-  - mask_path (str): Путь к папке с масками.
-  - X (list): Список имен файлов без расширений.
-  - transform: Преобразование изображений (опционально).
-
-  Returns:
-  Кортеж (img, mask) с изображением и маской.
-
-  Note:
-  - Изображения считываются в формате RGB.
-  - Маска преобразуется с помощью функции convert_mask (необходимо определить).
-  - Применяются аугментации, если указан параметр transform.
-  """
-  def __init__(self, img_path, mask_path, X, transform=None):
-    self.img_path = img_path
-    self.mask_path = mask_path
-    self.X = X
-    self.transform = transform
-
-  def __len__(self):
-    return len(self.X)
-
-  def __getitem__(self, idx):
-    img = cv2.imread(self.img_path + self.X[idx] + '.jpg')
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    mask_bgr = cv2.imread(self.mask_path + self.X[idx] + '.png')
-    mask_rgb = cv2.cvtColor(mask_bgr, cv2.COLOR_BGR2RGB)
-
-    mask = convert_mask(mask_rgb)
-    #mask = mask_rgb
-
-    if self.transform is not None:
-      aug = self.transform(image=img, mask=mask)
-      img = Image.fromarray(aug['image'])
-      mask = aug['mask']
-
-    if self.transform is None:
-      img = Image.fromarray(img)
-
-    mask = torch.from_numpy(mask).long()
-
-    return img, mask
-
-
-t_test = A.Resize(768, 1152, interpolation=cv2.INTER_NEAREST)
-test_set = DroneTestDataset(IMAGE_PATH, MASK_PATH, X_test, transform=t_test)
-image, mask = test_set[3]
-
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 def mask_to_color(mask):
     COLOR_MAPPING = {
@@ -110,7 +56,8 @@ def predict_image_mask(model, image, mean=[0.485, 0.456, 0.406], std=[0.229, 0.2
   model.eval()
   t = T.Compose([T.ToTensor(), T.Normalize(mean, std)])
   image = t(image)
-  model.to(device); image=image.to(device)
+  model.to(device); 
+  image=image.to(device)
   with torch.no_grad():
 
     image = image.unsqueeze(0)
@@ -132,8 +79,8 @@ def get_image(path):
     return resized_image
 
 def predict(path):
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model = torch.load('mysite\ml_model\Unet-Mobilenet.pt')
+    
+    model = torch.load('C:\\Users\\user\\Desktop\\graduate-work\\mysite\\ml_model\\Unet-Mobilenet.pt')
     model.eval()
     model.to(device)
 
