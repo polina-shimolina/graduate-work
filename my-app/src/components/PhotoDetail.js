@@ -2,6 +2,30 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Card, Row, Col, Button } from 'react-bootstrap';
 
+const COLOR_MAPPING = {
+    '(226, 169, 41)': 'Вода',
+    '(132, 41, 246)': 'Земля',
+    '(110, 193, 228)': 'Дорога',
+    '(60, 16, 152)': 'Здание',
+    '(254, 221, 58)': 'Растение'
+};
+
+const Legend = () => {
+    return (
+        <Card className="mx-1 my-2">
+            <Card.Body>
+                <Card.Title>Легенда</Card.Title>
+                {Object.entries(COLOR_MAPPING).map(([color, label]) => (
+                    <div key={color} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+                        <div style={{ width: '20px', height: '20px', backgroundColor: `rgb${color}`, marginRight: '10px' }}></div>
+                        <span>{label}</span>
+                    </div>
+                ))}
+            </Card.Body>
+        </Card>
+    );
+};
+
 const PhotoDetail = () => {
     const { id } = useParams();
     const [photoData, setPhotoData] = useState(null);
@@ -50,6 +74,9 @@ const PhotoDetail = () => {
                                 <Card.Title>Сегментированное фото</Card.Title>
                             </Card.Body>
                         </Card>
+                    </Col>
+                    <Col md={2}>
+                        <Legend />
                     </Col>
                 </Row>
             )}
