@@ -125,7 +125,7 @@ function Login({ onLogin }) {
            })
            .catch(error => {
              console.log(error)
-             window.alert('Пользователя с таким именем не существует, воспользуйся формой для регистрации.');
+             window.alert('Что-то пошло не так, возможно пользователя с таким именем не существует или пароль введет не верно.');
            })
       .finally(setLoading(false))
     }
@@ -141,12 +141,12 @@ function Login({ onLogin }) {
                   <h2>Вход</h2>
                   <div className="row">
                       <div className="col-sm-6 mx-auto">
-                          <input className="form-control mb-3" type="text" name="username" value={formUsername} onChange={e => setFormUsername(e.target.value)} placeholder="Username"/>
+                          <input className="form-control mb-3" type="text" name="username" value={formUsername} onChange={e => setFormUsername(e.target.value)} placeholder="Username" required/>
                       </div>
                   </div>
                   <div className="row">
                       <div className="col-sm-6 mx-auto">
-                          <input className="form-control mb-3" type="password" name="password" value={formPassword} onChange={e => setFormPassword(e.target.value)} placeholder="Password"/>
+                          <input className="form-control mb-3" type="password" name="password" value={formPassword} onChange={e => setFormPassword(e.target.value)} placeholder="Password" required/>
                       </div>
                   </div>
                   <div className="row">

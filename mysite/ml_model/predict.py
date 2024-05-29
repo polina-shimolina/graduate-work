@@ -80,7 +80,9 @@ def get_image(path):
 
 def predict(path):
     
+    # model = torch.load('C:\\Users\\user\\Desktop\\graduate-work\\mysite\\ml_model\\deepllabv3-Mobilenet.pt')
     model = torch.load('C:\\Users\\user\\Desktop\\graduate-work\\mysite\\ml_model\\Unet-Mobilenet.pt')
+    # model = torch.load('C:\\Users\\user\\Desktop\\graduate-work\\mysite\\ml_model\\Linknet-Mobilenet.pt')
     model.eval()
     model.to(device)
 

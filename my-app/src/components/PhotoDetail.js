@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Card, Row, Col, Button } from 'react-bootstrap';
+import './style/card-wrapper.css'
+
 
 const COLOR_MAPPING = {
     '(226, 169, 41)': 'Вода',
@@ -12,7 +14,7 @@ const COLOR_MAPPING = {
 
 const Legend = () => {
     return (
-        <Card className="mx-1 my-2">
+        <Card className="mx-2 my-2">
             <Card.Body>
                 <Card.Title>Легенда</Card.Title>
                 {Object.entries(COLOR_MAPPING).map(([color, label]) => (
@@ -26,9 +28,39 @@ const Legend = () => {
     );
 };
 
+
+
 const PhotoDetail = () => {
     const { id } = useParams();
     const [photoData, setPhotoData] = useState(null);
+
+
+    const handleSaveImage = async (imageUrl) => {
+        try {
+            const response = await fetch(imageUrl);
+            const blob = await response.blob();
+    
+            const fileHandle = await window.showSaveFilePicker({
+                suggestedName: 'segmented_image.jpg',
+                types: [
+                    {
+                        description: 'JPEG файл',
+                        accept: {
+                            'image/jpeg': ['.jpg'],
+                        },
+                    },
+                ],
+            });
+    
+            const writable = await fileHandle.createWritable();
+            await writable.write(blob);
+            await writable.close();
+    
+        } catch (error) {
+            console.error('Error saving image:', error);
+        }
+    };
+    
 
     useEffect(() => {
         const fetchPhotoData = async () => {
@@ -50,7 +82,7 @@ const PhotoDetail = () => {
                 <Button variant="primary">&#8592; Назад к фотографиям</Button>
             </Link>
             {photoData && (
-                <Row style={{ marginLeft: '300px', marginRight: '300px' }}>
+                <Row className="card-wrapper" style={{ marginLeft: '100px', marginRight: '100px', display: 'flex' }}>
                     <h1 style={{ textAlign: 'center' }}>
                         Изображения
                         <span className="question-mark" 
@@ -61,7 +93,7 @@ const PhotoDetail = () => {
                     </h1>
                     <Col>
                         <Card className="mx-2 my-2">
-                            <Card.Img variant="top" src={photoData.uploaded_photo.photo} />
+                            <Card.Img variant="top" src={photoData.uploaded_photo.photo} className="img-fluid" style={{ height: '400px', objectFit: 'cover' }} />
                             <Card.Body>
                                 <Card.Title>Загруженное фото</Card.Title>
                             </Card.Body>
@@ -69,14 +101,25 @@ const PhotoDetail = () => {
                     </Col>
                     <Col>
                         <Card className="mx-2 my-2">
-                            <Card.Img variant="top" src={photoData.segmented_photo.photo} />
+                            <Card.Img variant="top" src={photoData.segmented_photo.photo} className="img-fluid" style={{ height: '400px', objectFit: 'cover' }} />
                             <Card.Body>
                                 <Card.Title>Сегментированное фото</Card.Title>
+                                <Button variant="success" onClick={() => handleSaveImage(photoData.segmented_photo.photo)}>Сохранить изображение</Button>
                             </Card.Body>
                         </Card>
                     </Col>
                     <Col md={2}>
-                        <Legend />
+                        <Card className="legend-card mx-2 my-2" style={{ height: '50%' }}>
+                            <Card.Body>
+                                <Card.Title>Легенда</Card.Title>
+                                {Object.entries(COLOR_MAPPING).map(([color, label]) => (
+                                    <div key={color} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+                                        <div style={{ width: '20px', height: '20px', backgroundColor: `rgb${color}`, marginRight: '10px' }}></div>
+                                        <span>{label}</span>
+                                    </div>
+                                ))}
+                            </Card.Body>
+                        </Card>
                     </Col>
                 </Row>
             )}

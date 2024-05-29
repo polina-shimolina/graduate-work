@@ -16,6 +16,8 @@ tags:
     description: Операции с изображениями
   - name: team
     description: Операции с командами
+  - name: userphoto
+    description: Операции с изображениями пользователей
 paths:
   /user/login:
     get:
@@ -397,6 +399,28 @@ paths:
                       type: string
                     creator:
                       type: integer
+  /api/team/{team_id}/photos/:
+    get:
+      tags:
+      - team
+      summary: Получить изображения в команде
+      parameters:
+        - name: team_id
+          in: path
+          description: ID of the team
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: A list of team photos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TeamPhoto'
+  
   /api/team/{team_id}/users/:
     get:
       tags:
@@ -427,9 +451,89 @@ paths:
                       type: string
         '404':
           description: Команда не найдена
+          
+          
+  /api/userphoto/{teamphoto_id}/comments/:
+    get:
+      tags:
+      - userphoto
+      summary: Получить комментарии под фото команды
+      parameters:
+        - name: teamphoto_id
+          in: path
+          description: ID of the team photo
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Comment'
+    post:
+      tags:
+        - userphoto
+      summary: Создать новый комментарий под фото команды
+      parameters:
+        - name: teamphoto_id
+          in: path
+          description: ID of the team photo
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Comment'
+      responses:
+        '201':
+          description: Comment created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        '400':
+            description: Bad request
+            
+  /api/userphoto/{photo_id}/:
+    get:
+      tags: 
+      - userphoto
+      summary: Получить детали изображения пользователя
+      parameters:
+        - name: photo_id
+          in: path
+          description: ID of the user photo
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Details of the user photo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPhoto'
 components:
   schemas:
-  
+    Comment:
+      type: object
+      properties:
+        id:
+          type: integer
+        team_photo:
+          type: integer
+        text:
+          type: string
+        created_at:
+          type: string
+          format: date-time
     User:
       type: object
       properties:
@@ -583,4 +687,16 @@ components:
           type: string
           format: binary
           
-s
+    TeamPhoto:
+      type: object
+      properties:
+        id:
+          type: integer
+        team_id:
+          type: integer
+        photo_url:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+          

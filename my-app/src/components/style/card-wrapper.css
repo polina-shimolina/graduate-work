@@ -1,0 +1,14 @@
+.card-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.card-wrapper .card {
+    height: 100%;
+}
+
+.card-wrapper .card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}

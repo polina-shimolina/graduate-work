@@ -193,7 +193,14 @@ if(!localStorage.getItem('accessToken')){
             <img 
               src={URL.createObjectURL(selectedFile)} 
               alt="Preview" 
-              style={{ marginBottom: '20px', display: 'block', marginLeft: 'auto', marginRight: 'auto' }}
+              style={{ 
+                width: '400px', // Укажите нужную ширину
+                height: '300px', // Укажите нужную высоту
+                marginBottom: '20px', 
+                display: 'block', 
+                marginLeft: 'auto', 
+                marginRight: 'auto' 
+              }}
             />
             <button className="btn btn-secondary" style={{ color: 'white', backgroundColor: '#32CD32', borderBlockColor: '#32CD32' }} onClick={handleUploadFile} >Отправить файл на сервер</button>
           </div>

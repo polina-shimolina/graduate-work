@@ -26,7 +26,7 @@ const UserGuide = () => {
                     </ul>
                     <h3>Помощь и поддержка</h3>
                     <p>На каждой странице есть маленькие знаки вопроса, при наведении своего курсора на который ты можешь получить подсказку.</p>
-                    <p>Если возникли вопросы или проблемы, обращайся в <a href={`mailto:${supportEmail}`} onClick={handleContactSupport} style={{ cursor: 'pointer' }}>службу поддержки</a>.</p>
+                    {/*<p>Если возникли вопросы или проблемы, обращайся в <a href={`mailto:${supportEmail}`} onClick={handleContactSupport} style={{ cursor: 'pointer' }}>службу поддержки</a>.</p>*/}
                 </Col>
             </Row>
         </Container>

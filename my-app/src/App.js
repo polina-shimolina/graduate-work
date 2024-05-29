@@ -67,7 +67,7 @@ function App() {
             <Route path="/photos/:id" element={<PhotoDetail />} />
             <Route path="/userguide" element={<UserGuide />} />
           </Routes>
-          <Footer className="footer" />
+          {/*<Footer className="footer" />*/}
         </div>
       </BrowserRouter>
     );
